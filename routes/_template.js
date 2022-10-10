@@ -1,15 +1,12 @@
-const { ObjectId } = require('mongodb') // or ObjectID 
-const { url_upload_builder } = require('../../record_builder/url_upload_builder')
-const querier = require('../../modules/querier')
-const noti_handler = require('../../modules/noti_handler')
-const detectors = require('../../modules/detectors')
+const { ObjectId } = require('mongodb')
+const querier = require('../modules/querier')
+const { test_builder } = require('../record_builder/test_builder') //! change this
 
 module.exports = function (db) {
   var module = {}
 
   querier.db = db
-  querier.collection_name = 'urls_upload'
-  noti_handler.db = db
+  querier.collection_name = 'test' //! change this
 
 
   /* ****************************
@@ -56,66 +53,53 @@ module.exports = function (db) {
       num_per_page = params.num_per_page || 10,
       do_count = params.do_count || true
 
-    if (!filter.hasOwnProperty('url') || !filter.hasOwnProperty('analyzed')) {
-      return res.send({
-        status: 'error',
-        message: 'Missing params'
-      })
-    }
-
-    var url = filter.url,
-      analyzed = filter.analyzed    //? 0: did not run external analyzing modules yet. (only run traditional detectors)
-    //? 1: did run run external analyzing modules. 
-
-    /* 
-     * Reconstruct filter 
-     */
-    //! TODO
-
     return querier.getList(res, filter, page, num_per_page, do_count)
   }
 
 
   /* ****************************
    * 
-   * Upload urls
-   * When a user upload a url, always run static check first (if there's any)
+   * Add a record
    * ----
+   * Really inserting one record at a time is not really efficient. 
+   * Just leave it here for no reason.
+   * ------------
    * Params:
-      {
-        urls: []
-      }
+    {
+      ... // data to insert to db here
+    }
    * 
    * ****************************/
-  module.upload = async function (req, res) {
-    urls_data = req.body.urls
+  module.add = async function (req, res) {
+    const testJson = test_builder(req.body) //! change this
 
-    if (urls == null || urls.length === 0) {
-      return res.send({
-        status: 'error',
-        message: 'No urls provided'
-      })
+    return querier.insertOne(req, res, testJson)
+  }
+
+
+  /* ****************************
+   * 
+   * Add multiple records
+   * ----
+   * Use this api when want to insert a batch of data
+   * ------------
+   * Params:
+    {
+      data: [],
     }
+   * 
+   * ****************************/
+  module.addMany = async function (req, res) {
+    var test_datas = req.body.data
 
-    /* 
-     * loop through uploaded urls,
-     * run basic detectors
-     */
     var errAr = []
-    var uploadJsons = []
-    await Promise.all(urls_data.map(async upload_data => {
-      var uploadJson = url_upload_builder(upload_data)
-
-      if (uploadJson == null) {
-        errAr.push('Can\'t build record')
-      }
-      else {
-        //? run static detector for url here
-        uploadJson = await detectors.static4url(upload_data.url_path, uploadJson)
-        console.log('\t >> run static done ')
-        // console.log('\t >> run static done ')
-
-        uploadJsons.push(uploadJson)
+    var testJsons = []
+    await Promise.all(test_datas.map(async test_data => {
+      const testJson = test_builder(test_data) //! change this
+      if (testJson == null) {
+        errAr.push(`Fail to process ${JSON.stringify(test_data)} : Can't build record`)
+      } else {
+        testJsons.push(testJson)
       }
     }))
 
@@ -129,14 +113,14 @@ module.exports = function (db) {
       //   status: 'error',
       //   message: errAr.join('\n')
       // })
-      noti_handler.pushMsgs(req, errAr)
+      // noti_handler.pushMsgs(req, errAr)
     }
 
 
     /* 
      * Insert all records to db 
      */
-    return querier.insertMany(req, res, uploadJsons)
+    return querier.insertMany(req, res, testJsons)
   }
 
 
@@ -146,9 +130,19 @@ module.exports = function (db) {
    * 
    * ****************************/
   module.update = async function (req, res) {
-    const uploadJson = url_upload_builder(req.body)
+    const testJson = test_builder(req.body) //! change this
 
-    return querier.updateOne(req, res, uploadJson)
+    return querier.updateOne(req, res, testJson)
+  }
+
+
+  /* ****************************
+   * 
+   * Delete a record
+   * 
+   * ****************************/
+  module.delete = async function (req, res) {
+    return querier.deleteById(req, res)
   }
 
 

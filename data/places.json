@@ -1,0 +1,442 @@
+[
+  {
+    "_id": {
+      "$oid": "633ce413fb059e62a5cb7298"
+    },
+    "local_name": "Melbourne Zoo",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.78397347356697,
+      "longitude": 144.95155802671428
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633ce501fb059e62a5cb72a9"
+    },
+    "local_name": "Lost Dogs Home North Melbourne",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.797012552263574,
+      "longitude": 144.93794165128418
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633ce54bfb059e62a5cb72aa"
+    },
+    "local_name": "Lort Smith Adoption Centre",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.79863370901105,
+      "longitude": 144.953318426510838
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633ce590fb059e62a5cb72ab"
+    },
+    "local_name": "Second Chance Animal Rescue",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.614641397025615,
+      "longitude": 144.94124071593487
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633ce6dcfb059e62a5cb72ac"
+    },
+    "local_name": "SEA LIFE Melbourne Aquarium",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.820448876690136,
+      "longitude": 144.9582442460267
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633ce7d1fb059e62a5cb72ad"
+    },
+    "local_name": "St Kilda Breakwater Penguins",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.86452119923117,
+      "longitude": 144.96481378438872
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633ce8dffb059e62a5cb72ae"
+    },
+    "local_name": "Werribee Open Range Zoo",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.92250854930615,
+      "longitude": 144.66719088253782
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633ce94bfb059e62a5cb72af"
+    },
+    "local_name": "Bundoora Park Farm",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.706980805895874,
+      "longitude": 145.0439319267121
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d1b4657a6aa7ecdd7fda6"
+    },
+    "local_name": "Royal Botanical Gardens Victoria ",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.82992040541697,
+      "longitude": 144.97953043765128
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d1d0e7569d083c9636e54"
+    },
+    "local_name": "Fitzroy Gardens",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.81164730040914,
+      "longitude": 144.97997744488995
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d1ef07569d083c9636e55"
+    },
+    "local_name": "Royal Park Australian Native Garden",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.79141775276177,
+      "longitude": 144.95687367678545
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d1f227569d083c9636e56"
+    },
+    "local_name": "St Kilda Botanical Gardens",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.87074779551415,
+      "longitude": 144.98397519697588
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d1fb37569d083c9636e57"
+    },
+    "local_name": "North West Patch Community Gardens",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.80141182064315,
+      "longitude": 144.95376954020654
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d20327569d083c9636e58"
+    },
+    "local_name": "Urban Reforestation's Community Garden",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.820179701882886,
+      "longitude": 144.94521935585638
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d20f37569d083c9636e59"
+    },
+    "local_name": "Mater Street Community Garden",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.79567883101938,
+      "longitude": 144.98805552698772
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d21487569d083c9636e5a"
+    },
+    "local_name": "Essendon Community Garden",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.77455489235308,
+      "longitude": 144.93588482887165
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d23ea7569d083c9636e69"
+    },
+    "local_name": "Alexandra Gardens",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.8203639789364,
+      "longitude": 144.9721124405121
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d24397569d083c9636e6a"
+    },
+    "local_name": "Fairfield Boathouse",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.78497648002093,
+      "longitude": 145.01371782701946
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d254b7569d083c9636e79"
+    },
+    "local_name": "National Gallery of Victoria",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.82223085108684,
+      "longitude": 144.96878339767582
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d25b77569d083c9636e7a"
+    },
+    "local_name": "Como House & Gardens",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.83778328327905,
+      "longitude": 145.00377327120128
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d25f47569d083c9636e7b"
+    },
+    "local_name": "LaTrobe's Cottage",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.831411855569705,
+      "longitude": 144.97611584236486
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d26427569d083c9636e7c"
+    },
+    "local_name": "Labassa Mansion",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.869640999325824,
+      "longitude": 145.00979826934946
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d26f67569d083c9636e7d"
+    },
+    "local_name": "Polly Woodside",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.82427358826728,
+      "longitude": 144.95360791352863
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d27a87569d083c9636e7e"
+    },
+    "local_name": "Luna Park",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.86767069547602,
+      "longitude": 144.9768488963329
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d27e57569d083c9636e7f"
+    },
+    "local_name": "Queen Victoria Market",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.80746958421665,
+      "longitude": 144.95665625215102
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d285b7569d083c9636e80"
+    },
+    "local_name": "Federation Square",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.81787504066841,
+      "longitude": 144.96906825933377
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d28c17569d083c9636e89"
+    },
+    "local_name": "State Library Victoria",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.809554389788225,
+      "longitude": 144.96518969818396
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d296f7569d083c9636e8e"
+    },
+    "local_name": "Old Melbourne Gaol",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.80773195274598,
+      "longitude": 144.96524334236437
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d29ef7569d083c9636e8f"
+    },
+    "local_name": "Readings Carlton",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.797896747607545,
+      "longitude": 144.96709224051156
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2a527569d083c9636e90"
+    },
+    "local_name": "Hill of Content Bookshop",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.81170881012059,
+      "longitude": 144.97080288469223
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2a857569d083c9636e91"
+    },
+    "local_name": "The Paperback Bookshop",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.811416457287294,
+      "longitude": 144.9713361000366
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2ae57569d083c9636e92"
+    },
+    "local_name": "Kay Craddock Antiquarian Bookseller",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.814612134421445,
+      "longitude": 144.96819018283983
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2b4e7569d083c9636e93"
+    },
+    "local_name": "Bargoonga Nganjin North Fitzroy Library",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.784435924114135,
+      "longitude": 144.98282756934734
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2b857569d083c9636e94"
+    },
+    "local_name": "The Library at the Dock",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.819791775332504,
+      "longitude": 144.94053655400384
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2bca7569d083c9636e95"
+    },
+    "local_name": "Melbourne Athenaeum Library",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.81491308960354,
+      "longitude": 144.96734614051192
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2ccc7569d083c9636e96"
+    },
+    "local_name": "Williamstown Botanical Gardens",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.86563187641377,
+      "longitude": 144.89682962753034
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2d0d7569d083c9636e97"
+    },
+    "local_name": "Flagstaff Gardens",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.810277963580795,
+      "longitude": 144.95456281352824
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2d537569d083c9636e98"
+    },
+    "local_name": "Veg Out Community Gardens St Kilda",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.86870465356832,
+      "longitude": 144.97793642887407
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2dac7569d083c9636e99"
+    },
+    "local_name": "Melbourne University Community Garden",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.79842979466885,
+      "longitude": 144.96220782331474
+    }
+  },
+  {
+    "_id": {
+      "$oid": "633d2df67569d083c9636e9a"
+    },
+    "local_name": "Melbourne Museum",
+    "images": "",
+    "coordinates": {
+      "latitude": -37.8031119152909,
+      "longitude": 144.9716656963313
+    }
+  }
+]

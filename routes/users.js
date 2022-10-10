@@ -1,37 +1,63 @@
+const { ObjectId } = require('mongodb') // or ObjectID 
+const querier = require('../modules/querier')
+// const { user_builder } = require('../record_builder/user_builder') //! change this
+
 module.exports = function (db) {
-  var module = {};
+  var module = {}
 
-  module.getAstrologers = async function (req, res) {
-    order_field = req.body.order;
-    order_asc = req.body.asc;
+  querier.db = db
+  const collection_name = 'users' //! change this
 
-    if (order_field == null) {
-      order_field = 'stars'
-    }
-    if (order_asc == null) {
-      order_asc = -1;
-    }
-    // console.log('[/user/topics][getAstrologers] req.body', req.body);
 
-    const UsersCollection = db.collection('users');
+  /* ****************************
+   * 
+   * Query a specific record by id
+   * 
+   * ****************************/
+  module.getById = async function (req, res) {
+    querier.collection_name = collection_name
+    
+    return querier.getById(req, res)
+  }
 
-    var items = await UsersCollection.aggregate([{
-      $match: {
-        type: { $eq: 'astrologer' }
+
+  /* ****************************
+   * 
+   * Retrieve a list of records
+   * ----
+   * Params:
+      {
+        "filter": {
+        },
+        "page": int,
+        "num_per_page": int,
+        "do_count": bool
       }
-    }, {
-      $sort: {
-        order_field: order_asc
-      }
-    }]).toArray();
+   *  All these are mandatory and must be parsed
+   *  If no filter, parse null
+   * 
+   * ****************************/
+  module.getList = async function (req, res) {
+    querier.collection_name = collection_name
+    
+    var params = req.body
+    // console.log('params', params)
 
-    // console.log('[/users/astrologers][getAstrologers] items', items);
+    if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
+      return res.send({
+        status: 'error',
+        message: 'Missing params'
+      })
+    }
 
-    return res.send({
-      status: 'success',
-      data: items
-    });
-  };
+    var filter = params.filter,
+      page = params.page || 1,
+      num_per_page = params.num_per_page || 10,
+      do_count = params.do_count || true
 
-  return module;
+    return querier.getList(res, filter, page, num_per_page, do_count)
+  }
+
+
+  return module
 }

@@ -1,5 +1,12 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
 
+function getMongoDecNum(value) {
+  if (typeof value !== 'undefined') {
+    return parseFloat(value.toString())
+  }
+  return value
+}
+
 var self = module.exports = {
 
   db: null,
@@ -39,14 +46,87 @@ var self = module.exports = {
    * 
    * ****************************/
   getByQuery: async function (req, res, query) {
-    const id = req.body._id
-
     const TheCollection = self.db.collection(self.collection_name)
     const item = await TheCollection.findOne(query)
 
     return res.send({
       status: 'success',
       data: item
+    })
+  },
+
+
+  /* ****************************
+   * 
+   * Query a specific record by agrgegation query
+   * 
+   * ****************************/
+  getByAggQuery: async function (req, res, aggAr) {
+    const TheCollection = self.db.collection(self.collection_name)
+    const items = await TheCollection.aggregate(aggAr).toArray()
+
+    var data = null
+    if (items.length > 0) {
+      data = items[0]
+    }
+
+    return res.send({
+      status: 'success',
+      data: data
+    })
+  },
+
+
+  /* ****************************
+   * 
+   * Retrieve a list of records using filter
+   * 
+   * ****************************/
+  getListAdvanced: async function (res, filter, aggQ, page, num_per_page, do_count) {
+    var aggAr = []
+
+    if (filter != null && filter.hasOwnProperty('aggMatchQ') && filter.aggAr) {
+      aggAr = filter.aggMatchQ
+    }
+    else {
+      var matchAr = []
+      for (const [k, v] of Object.entries(filter)) {
+        console.log(k, v)
+        if (v != null && v.length > 0) {
+          matchAr.push({ [k]: { $eq: v } })
+        }
+      }
+      // console.log('matchAr', matchAr)
+
+      if (matchAr.length > 0) {
+        aggAr.push({
+          $match: {
+            $and: matchAr
+          }
+        })
+      }
+    }
+
+    aggAr = [...aggAr, ...aggQ]
+
+    aggAr.push({
+      $facet: {
+        paginatedResults: [{ $skip: (page - 1) * num_per_page }, { $limit: num_per_page }],
+        totalCount: [
+          {
+            $count: 'total'
+          }
+        ]
+      }
+    })
+
+    const TheCollection = self.db.collection(self.collection_name)
+    const items = await TheCollection.aggregate(aggAr).toArray()
+
+    return res.send({
+      status: 'success',
+      data: items[0].paginatedResults,
+      total: do_count ? (items[0].totalCount.length > 0 ? items[0].totalCount[0].total : 0) : -1
     })
   },
 
@@ -75,8 +155,8 @@ var self = module.exports = {
   getList: async function (res, filter, page, num_per_page, do_count) {
     var aggAr = []
 
-    if (filter != null && filter.hasOwnProperty('aggAr') && filter.aggAr) {
-      aggAr = filter.aggAr
+    if (filter != null && filter.hasOwnProperty('aggMatchQ') && filter.aggAr) {
+      aggAr = filter.aggMatchQ
     }
     else {
       var matchAr = []
@@ -96,6 +176,60 @@ var self = module.exports = {
         })
       }
     }
+
+    aggAr.push({
+      $facet: {
+        paginatedResults: [{ $skip: (page - 1) * num_per_page }, { $limit: num_per_page }],
+        totalCount: [
+          {
+            $count: 'total'
+          }
+        ]
+      }
+    })
+
+    const TheCollection = self.db.collection(self.collection_name)
+    const items = await TheCollection.aggregate(aggAr).toArray()
+
+    return res.send({
+      status: 'success',
+      data: items[0].paginatedResults,
+      total: do_count ? (items[0].totalCount.length > 0 ? items[0].totalCount[0].total : 0) : -1
+    })
+  },
+
+
+  /* ****************************
+   * 
+   * Retrieve a list of records using filter
+   * 
+   * ****************************/
+  getListAdvanced: async function (res, filter, aggQ, page, num_per_page, do_count) {
+    var aggAr = []
+
+    if (filter != null && filter.hasOwnProperty('aggMatchQ') && filter.aggAr) {
+      aggAr = filter.aggMatchQ
+    }
+    else {
+      var matchAr = []
+      for (const [k, v] of Object.entries(filter)) {
+        console.log(k, v)
+        if (v != null && v.length > 0) {
+          matchAr.push({ [k]: { $eq: v } })
+        }
+      }
+      // console.log('matchAr', matchAr)
+
+      if (matchAr.length > 0) {
+        aggAr.push({
+          $match: {
+            $and: matchAr
+          }
+        })
+      }
+    }
+
+    aggAr = [...aggAr, ...aggQ]
 
     aggAr.push({
       $facet: {
@@ -206,15 +340,29 @@ var self = module.exports = {
      * Use this key to query for the record that needs updating.
      */
     var data = req.body
-    if (!data.hasOwnProperty('_id') || data._id == null || data._id.length === 0) {
-      return res.send({
-        status: 'error',
-        message: 'no _id provided'
-      })
-    }
+    // if (!data.hasOwnProperty('_id') || data._id == null || data._id.length === 0) {
+    //   return res.send({
+    //     status: 'error',
+    //     message: 'no _id provided'
+    //   })
+    // }
 
-    const id = ObjectId(data._id)
-    console.log('Updating data: ' + id)
+    /*
+     * What to update ?
+     */
+    if (data.hasOwnProperty('_id') && data._id != null && data._id.length > 0) {
+      const id = ObjectId(data._id)
+      console.log('Updating data: ' + id)
+
+      if (search_query == null) {
+        search_query = { _id: id }
+      } else {
+        search_query = { 
+          ...search_query,
+          _id: id
+        }  
+      }
+    }
 
     /*
      * The `update_data` is built using the `record_builder` modules,
@@ -230,13 +378,6 @@ var self = module.exports = {
 
     const dt = dateTime.create()
     update_data.time_last_modified = dt.format('Y-m-d H:M:S')
-
-    /*
-     * Whats to search ?
-     */
-    if (search_query == null) {
-      search_query = { _id: id }
-    }
 
     /* 
      * Okay update db

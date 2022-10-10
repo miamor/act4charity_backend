@@ -1,14 +1,18 @@
-const port = 3003
+const port = 5005
 const SECRET_KEY = 'asimplekey'
-const DB_HOST = '127.0.0.1'
+const DB_HOST = '149.28.157.194'
 const DB_PORT = '27017'
-const DB_USERNAME = ''
-const DB_PASSWORD = ''
+const DB_USERNAME = 'admin_a4c'
+const DB_PASSWORD = 'a4c%40comp18%2322'//'a4c@comp18#22'
 const DB_NAME = 'act4charity'
+const DB_AUTH_MECSM = 'DEFAULT'
+const DB_AUTH_SOURCE = 'perm'
 
 var mongo_connect_url = `mongodb://${DB_HOST}:${DB_PORT}`
-if (DB_USERNAME.length > 0 && DB_PASSWORD.length > 0)
-  mongo_connect_url = `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}`
+if (DB_USERNAME.length > 0 && DB_PASSWORD.length > 0) {
+  mongo_connect_url = `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/?authMechanism=${DB_AUTH_MECSM}&authSource=${DB_AUTH_SOURCE}`
+}
+// console.log(mongo_connect_url)
 
 /*
  * My life depends on you
@@ -64,9 +68,10 @@ JWT_CONFIG = expressJWT({
     } else {
       //res.sendStatus(401)
     }
-    // If we return null, we couldn't find a token.
-    // In this case, the JWT middleware will return a 401 (unauthorized) to the client for this request
-    return null
+    //? If we return null, we couldn't find a token.
+    //? In this case, the JWT middleware will return a 401 (unauthorized) to the client for this request
+    // return null
+    res.sendStatus(401)
   }
 }).unless({
   path: [
@@ -161,37 +166,37 @@ MongoClient.connect(mongo_connect_url).then(client => {
    * Admin routes 
    * 
    * ****************************/
-  var AD_USERS = require('./routes/admin/users'),
-    ad_users = new AD_USERS(db)
-  app.post('/admin/users/list', ad_users.getList)
-  app.post('/admin/users/detail', ad_users.getById)
-  app.post('/admin/users/add', ad_users.add)
-  app.post('/admin/users/update', ad_users.update)
-  app.post('/admin/users/delete', ad_users.delete)
+  // var AD_USERS = require('./routes/admin/users'),
+  //   ad_users = new AD_USERS(db)
+  // app.post('/admin/users/list', ad_users.getList)
+  // app.post('/admin/users/detail', ad_users.getById)
+  // app.post('/admin/users/add', ad_users.add)
+  // app.post('/admin/users/update', ad_users.update)
+  // app.post('/admin/users/delete', ad_users.delete)
 
-  var AD_CHARITY_ACT = require('./routes/admin/charity_acts'),
-    ad_charity_act = new AD_CHARITY_ACT(db)
-  app.post('/admin/charity_act/list', ad_charity_act.getList)
-  app.post('/admin/charity_act/detail', ad_charity_act.getById)
-  app.post('/admin/charity_act/add', ad_charity_act.add)
-  app.post('/admin/charity_act/update', ad_charity_act.update)
-  app.post('/admin/charity_act/delete', ad_charity_act.delete)
+  // var AD_CHARITY_ACT = require('./routes/admin/charity_acts'),
+  //   ad_charity_act = new AD_CHARITY_ACT(db)
+  // app.post('/admin/charity_act/list', ad_charity_act.getList)
+  // app.post('/admin/charity_act/detail', ad_charity_act.getById)
+  // app.post('/admin/charity_act/add', ad_charity_act.add)
+  // app.post('/admin/charity_act/update', ad_charity_act.update)
+  // app.post('/admin/charity_act/delete', ad_charity_act.delete)
 
-  var AD_CHARITY_ORG = require('./routes/admin/charity_orgs'),
-    ad_charity_org = new AD_CHARITY_ORG(db)
-  app.post('/admin/charity_org/list', ad_charity_org.getList)
-  app.post('/admin/charity_org/detail', ad_charity_org.getById)
-  app.post('/admin/charity_org/add', ad_charity_org.add)
-  app.post('/admin/charity_org/update', ad_charity_org.update)
-  app.post('/admin/charity_org/delete', ad_charity_org.delete)
+  // var AD_CHARITY_ORG = require('./routes/admin/charity_orgs'),
+  //   ad_charity_org = new AD_CHARITY_ORG(db)
+  // app.post('/admin/charity_org/list', ad_charity_org.getList)
+  // app.post('/admin/charity_org/detail', ad_charity_org.getById)
+  // app.post('/admin/charity_org/add', ad_charity_org.add)
+  // app.post('/admin/charity_org/update', ad_charity_org.update)
+  // app.post('/admin/charity_org/delete', ad_charity_org.delete)
 
-  var AD_CHALLENGE = require('./routes/admin/challenges'),
-    ad_challenge = new AD_CHALLENGE(db)
-  app.post('/admin/challenge/list', ad_challenge.getList)
-  app.post('/admin/challenge/detail', ad_challenge.getById)
-  app.post('/admin/challenge/add', ad_challenge.add)
-  app.post('/admin/challenge/update', ad_challenge.update)
-  app.post('/admin/challenge/delete', ad_challenge.delete)
+  // var AD_CHALLENGE = require('./routes/admin/challenges'),
+  //   ad_challenge = new AD_CHALLENGE(db)
+  // app.post('/admin/challenge/list', ad_challenge.getList)
+  // app.post('/admin/challenge/detail', ad_challenge.getById)
+  // app.post('/admin/challenge/add', ad_challenge.add)
+  // app.post('/admin/challenge/update', ad_challenge.update)
+  // app.post('/admin/challenge/delete', ad_challenge.delete)
 
 
 
@@ -200,9 +205,9 @@ MongoClient.connect(mongo_connect_url).then(client => {
    * Sponsor routes 
    * 
    * ****************************/
-  var SPON_CHALLENGE = require('./routes/sponsor/challenges'),
-    spon_challenge = new SPON_CHALLENGE(db)
-  app.post('/sponsor/challenge/donate', spon_challenge.donate)
+  // var SPON_CHALLENGE = require('./routes/sponsor/challenges'),
+  //   spon_challenge = new SPON_CHALLENGE(db)
+  // app.post('/sponsor/challenge/donate', spon_challenge.donate)
 
 
 
@@ -214,14 +219,16 @@ MongoClient.connect(mongo_connect_url).then(client => {
    * ****************************/
   var US_ME_INFO = require('./routes/user/me'),
     us_me_info = new US_ME_INFO(db)
-  app.get('/user/me', us_me_info.getMyInfo)
+  app.post('/user/me/info', us_me_info.getMyInfo)
   app.post('/user/me/update', us_me_info.update)
+  app.post('/user/me/uploadAvt', us_me_info.uploadAvt)
 
   var US_CHALLENGE = require('./routes/user/challenges'),
     us_challenges = new US_CHALLENGE(db)
-  app.post('/user/challenges/list', us_challenges.getList)
-  app.post('/user/challenges/join', us_challenges.join)
-  app.post('/user/challenges/my', us_challenges.getMy)
+  app.post('/user/challenges/list', us_challenges.getList) //? list by user preference
+  app.post('/user/challenges/detail', us_challenges.getById)
+  app.post('/user/challenges/join', us_challenges.joinById)
+  app.post('/user/challenges/completed', us_challenges.getCompleted) //? my completed challenges
 
 
 
@@ -232,26 +239,34 @@ MongoClient.connect(mongo_connect_url).then(client => {
    * ****************************/
   var DATA = require('./routes/challenges'),
     challenges = new DATA(db)
-  app.post('/challenges/list', challenges.getList) //? list by user preference
+  app.post('/challenges/list', challenges.getList)
   app.post('/challenges/detail', challenges.getById)
   app.post('/challenges/participants', challenges.getParticipants)
 
   var USERS = require('./routes/users'),
     users = new USERS(db)
   app.post('/users/list', users.getList)
+  app.post('/users/detail', users.getById)
 
-  var CHARITY_ACT = require('./routes/charity_act'),
-    charity_act = new CHARITY_ACT(db)
-  app.post('/charity_act/list', charity_act.getList)
-  app.post('/charity_act/detail', charity_act.getById)
+  var CHARITY_ACTS = require('./routes/charity_acts'),
+    charity_acts = new CHARITY_ACTS(db)
+  app.post('/charity_acts/list', charity_acts.getList)
+  app.post('/charity_acts/detail', charity_acts.getById)
 
-  var CHARITY_ORG = require('./routes/charity_org'),
-    charity_org = new CHARITY_ORG(db)
-  app.post('/charity_org/list', charity_org.getList)
-  app.post('/charity_org/detail', charity_org.getById)
+  var CHARITY_ORGS = require('./routes/charity_orgs'),
+    charity_orgs = new CHARITY_ORGS(db)
+  app.post('/charity_orgs/list', charity_orgs.getList)
+  app.post('/charity_orgs/detail', charity_orgs.getById)
+
+  var SPONSORS = require('./routes/sponsors'),
+    sponsors = new SPONSORS(db)
+  app.post('/sponsors/list', sponsors.getList)
+  app.post('/sponsors/detail', sponsors.getById)
 
 
-  // Fire up the server
+  /* 
+   * Fire up the server
+   */
   app.listen(port)
   console.log('Listening on port ' + port + '...')
 })

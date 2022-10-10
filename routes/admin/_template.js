@@ -1,12 +1,12 @@
 const { ObjectId } = require('mongodb')
 const querier = require('../../modules/querier')
-const { challenge_builder } = require('../../record_builder/challenge_builder') //! change this
+const { test_builder } = require('../../record_builder/test_builder') //! change this
 
 module.exports = function (db) {
   var module = {}
 
   querier.db = db
-  querier.collection_name = 'challenges' //! change this
+  querier.collection_name = 'tests' //! change this
 
 
   /* ****************************
@@ -23,7 +23,7 @@ module.exports = function (db) {
    * 
    * ****************************/
   module.add = async function (req, res) {
-    const testJson = challenge_builder(req.body) //! change this
+    const testJson = test_builder(req.body) //! change this
 
     return querier.insertOne(req, res, testJson)
   }
@@ -44,11 +44,10 @@ module.exports = function (db) {
   module.addMany = async function (req, res) {
     var test_datas = req.body.data
 
-
     var errAr = []
     var testJsons = []
     await Promise.all(test_datas.map(async test_data => {
-      const testJson = challenge_builder(test_data) //! change this
+      const testJson = test_builder(test_data) //! change this
       if (testJson == null) {
         errAr.push(`Fail to process ${JSON.stringify(test_data)} : Can't build record`)
       } else {
@@ -83,7 +82,7 @@ module.exports = function (db) {
    * 
    * ****************************/
   module.update = async function (req, res) {
-    const testJson = challenge_builder(req.body) //! change this
+    const testJson = test_builder(req.body) //! change this
 
     return querier.updateOne(req, res, testJson)
   }

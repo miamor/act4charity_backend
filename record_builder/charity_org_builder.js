@@ -1,12 +1,12 @@
-module.exports.charity_act_builder = function (charity_act_data) {
+module.exports.charity_org_builder = function (charity_org_data) {
 
   /*
    * Won't live without you
    */
-  if (!charity_act_data.hasOwnProperty('name')) {
+  if (!charity_org_data.hasOwnProperty('name')) {
     return null
   }
-  if (charity_act_data.name == null || charity_act_data.name.length === 0) {
+  if (charity_org_data.name == null || charity_org_data.name.length === 0) {
     return null
   }
 
@@ -17,17 +17,17 @@ module.exports.charity_act_builder = function (charity_act_data) {
   charityActJson = {
     //? basic file info
     name: null,
-    activity: null,
+    des: null,
   }
 
 
   /*
    * Overwrite some data
    */
-  for (const key in charity_act_data) {
+  for (const key in charity_org_data) {
     if (charityActJson.hasOwnProperty(key)) {
       // console.log(`${key}: ${user[key]}`)
-      charityActJson[key] = charity_act_data[key]
+      charityActJson[key] = charity_org_data[key]
     }
   }
 

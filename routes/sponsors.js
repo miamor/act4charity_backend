@@ -1,11 +1,12 @@
-const querier = require('../../modules/querier')
-const { task_builder } = require('../../record_builder/task_builder')
+const { ObjectId } = require('mongodb') // or ObjectID 
+const querier = require('../modules/querier')
+// const { challenge_builder } = require('../record_builder/challenge_builder') //! change this
 
 module.exports = function (db) {
   var module = {}
 
   querier.db = db
-  querier.collection_name = 'tasks'
+  const collection_name = 'sponsors' //! change this
 
 
   /* ****************************
@@ -14,6 +15,8 @@ module.exports = function (db) {
    * 
    * ****************************/
   module.getById = async function (req, res) {
+    querier.collection_name = collection_name
+    
     return querier.getById(req, res)
   }
 
@@ -25,9 +28,8 @@ module.exports = function (db) {
    * Params:
       {
         "filter": {
-          "uid": string, 
-          "type": string,
-          "otype": string
+          "type": string,  discovery | walk
+          "distance"
         },
         "page": int,
         "num_per_page": int,
@@ -38,6 +40,8 @@ module.exports = function (db) {
    * 
    * ****************************/
   module.getList = async function (req, res) {
+    querier.collection_name = collection_name
+    
     var params = req.body
     // console.log('params', params)
 
@@ -53,56 +57,7 @@ module.exports = function (db) {
       num_per_page = params.num_per_page || 10,
       do_count = params.do_count || true
 
-    if (!filter.hasOwnProperty('uid') || !filter.hasOwnProperty('type') || !filter.hasOwnProperty('otype')) {
-      return res.send({
-        status: 'error',
-        message: 'Missing params'
-      })
-    }
-
-    var uid = filter.uid,
-      type = filter.type,
-      otype = filter.otype
-
-    /* 
-     * Reconstruct filter 
-     */
-    //! TODO
-
     return querier.getList(res, filter, page, num_per_page, do_count)
-  }
-
-
-  /* ****************************
-   * 
-   * Add a record
-   * 
-   * ****************************/
-  module.add = async function (req, res) {
-
-    /* 
-     * loop through uploaded paths
-     */
-    var taskJson = task_builder({
-      paths: req.body.paths,
-      otype: req.body.otype,
-      type: req.body.type,
-      flow: req.body.flow
-    }, db)
-
-
-    if (taskJson == null) {
-      return res.send({
-        status: 'error',
-        message: 'Can\'t build record'
-      })
-    }
-
-
-    /* 
-     * Insert all records to db 
-     */
-    return querier.insertOne(req, res, taskJson)
   }
 
 

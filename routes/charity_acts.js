@@ -1,12 +1,12 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
 const querier = require('../modules/querier')
-// const { challenge_builder } = require('../record_builder/challenge_builder') //! change this
+// const { charity_act_builder } = require('../record_builder/charity_act_builder') //! change this
 
 module.exports = function (db) {
   var module = {}
 
   querier.db = db
-  const collection_name = 'challenges' //! change this
+  const collection_name = 'charity_acts' //! change this
 
 
   /* ****************************
@@ -28,8 +28,6 @@ module.exports = function (db) {
    * Params:
       {
         "filter": {
-          "type": string,  discovery | walk
-          "distance"
         },
         "page": int,
         "num_per_page": int,
@@ -58,19 +56,6 @@ module.exports = function (db) {
       do_count = params.do_count || true
 
     return querier.getList(res, filter, page, num_per_page, do_count)
-  }
-
-
-
-  /* ****************************
-   * 
-   * Retrieve list of participants by challenge id
-   * 
-   * ****************************/
-  module.getParticipants = async function (req, res) {
-    querier.collection_name = collection_name
-    
-    return res.send({})
   }
 
 

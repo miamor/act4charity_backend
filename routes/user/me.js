@@ -1,31 +1,41 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
 const querier = require('../../modules/querier')
+const uploader = require('../../modules/uploader')
 const { user_builder } = require('../../record_builder/user_builder')
 
 module.exports = function (db) {
   var module = {}
 
-  module.getMyInfo = function (req, res) {
+  const collection_name = 'users' //! change this
+
+
+  /* ****************************
+   * 
+   * Get my info
+   * 
+   * ****************************/
+  module.getMyInfo = async function (req, res) {
     var token = req.headers['Authorization'] || req.headers['authorization']
 
     if (token) {
       // verifies secret and checks exp
-      jwt.verify(token, app.get('superSecret'), function (err, decoded) {
+      return jwt.verify(token, app.get('superSecret'), async function (err, decoded) {
         if (err) {
           return res.send({ status: 'error', message: 'Failed to authenticate token.' })
         } else {
-          // if everything is good, save to request for use in other routes
+          //? if everything is good, save to request for use in other routes
           req.decoded = decoded
           console.log(decoded)
-          // get user info here
-          db.collection('users', function (err, collection) {
-            collection.findOne({ username: decoded.username }, function (err, item) {
-              delete item['_id']
-              delete item['password']
-              console.log('Got my info: ')
-              console.log(JSON.stringify(item))
-              return res.send(item)
-            })
+
+          const TheCollection = db.collection(collection_name)
+          const item = await TheCollection.findOne({ username: decoded.username })
+          delete item['password']
+
+          console.log('Got my info: ')
+          console.log(JSON.stringify(item))
+          return res.send({
+            status: 'success',
+            data: item
           })
         }
       })
@@ -41,15 +51,66 @@ module.exports = function (db) {
     }
   }
 
+
+  /* ****************************
+   * 
+   * Update my info
+   * 
+   * ****************************/
   module.update = async function (req, res) {
+    querier.collection_name = collection_name
+
+    const loggedUser = req.user
+
+    console.log(loggedUser)
+
     // var users = req.body
     // users.username = loggedUser.username
     // users.type = loggedUser.type
     // delete users._id
 
-    const userJson = user_builder(req.body)
+    // const userJson = user_builder(req.body)
+    const userJson = req.body
 
-    return querier.updateOne(req, res, userJson, {_id: ObjectId(loggedUser.id)})
+    return querier.updateOne(req, res, userJson, { _id: ObjectId(loggedUser.id) })
+  }
+
+
+  /* ****************************
+   * 
+   * Upload and update profile picture
+   * 
+   * ****************************/
+  module.uploadAvt = async function (req, res) {
+    querier.collection_name = collection_name
+
+    const loggedUser = req.user
+
+    /*
+     * first upload files
+     */
+    var upload_res = uploader.uploadFiles(req, res)
+    if (upload_res.status === 'error') {
+      return res.send({
+        status: 'error',
+        message: upload_res
+      })
+    }
+
+    files_data = upload_res.data
+
+
+    /* 
+     * Get path to the uploaded file
+     */
+    // const filepaths = files_data.map(file_data => file_data.file_path)
+    const filepath = files_data[0].file_path
+
+
+    /* 
+     * Update database
+     */
+    return querier.updateOne(req, res, { avatar: filepath }, { _id: ObjectId(loggedUser.id) })
   }
 
 
