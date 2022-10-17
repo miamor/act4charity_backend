@@ -1,12 +1,12 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
-const querier = require('../modules/querier')
-// const { charity_act_builder } = require('../record_builder/charity_act_builder') //! change this
+const querier = require('../../modules/querier')
+// const { user_builder } = require('../../record_builder/user_builder') //! change this
 
 module.exports = function (db) {
   var module = {}
 
   querier.db = db
-  const collection_name = 'charity_orgs' //! change this
+  const collection_name = 'users' //! change this
 
 
   /* ****************************
@@ -16,7 +16,7 @@ module.exports = function (db) {
    * ****************************/
   module.getById = async function (req, res) {
     querier.collection_name = collection_name
-    
+
     return querier.getById(req, res)
   }
 
@@ -39,8 +39,8 @@ module.exports = function (db) {
    * ****************************/
   module.getList = async function (req, res) {
     querier.collection_name = collection_name
-    
-    var params = req.body
+
+    const params = req.body
     // console.log('params', params)
 
     if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
@@ -50,12 +50,40 @@ module.exports = function (db) {
       })
     }
 
-    var filter = params.filter,
+    const filter = params.filter,
       page = params.page || 1,
       num_per_page = params.num_per_page || 10,
       do_count = params.do_count || true
 
     return querier.getList(res, filter, page, num_per_page, do_count)
+  }
+
+
+
+  /* ****************************
+   * 
+   * Find users by username
+   *
+   * ****************************/
+  module.findByUsername = async function (req, res) {
+    querier.collection_name = collection_name
+
+    const params = req.body
+
+    if (params.username == null) {
+      return res.status(500).send({
+        status: 'error',
+        message: 'Missing params'
+      })
+    }
+
+    const TheCollection = db.collection(collection_name)
+    const items = await TheCollection.find({ username: { $regex: params.username } }).project({ username: 1 }).toArray()
+
+    return res.send({
+      status: 'success',
+      data: items
+    })
   }
 
 

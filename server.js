@@ -223,12 +223,52 @@ MongoClient.connect(mongo_connect_url).then(client => {
   app.post('/user/me/update', us_me_info.update)
   app.post('/user/me/uploadAvt', us_me_info.uploadAvt)
 
+  var US_ME_CHALLENGE = require('./routes/user/me_challenges'),
+    us_me_challenges = new US_ME_CHALLENGE(db)
+  app.post('/user/me_challenges/completed', us_me_challenges.getChallengesCompleted) //? my completed challenges
+  app.post('/user/me_challenges/ongoing', us_me_challenges.getChallengesOngoing)
+  app.post('/user/me_challenges/invitations_to_me', us_me_challenges.getInvitationsToMe)
+
   var US_CHALLENGE = require('./routes/user/challenges'),
     us_challenges = new US_CHALLENGE(db)
   app.post('/user/challenges/list', us_challenges.getList) //? list by user preference
+  app.post('/user/challenges/list_discover', us_challenges.getListDiscover)
+  app.post('/user/challenges/list_walk', us_challenges.getListWalk)
   app.post('/user/challenges/detail', us_challenges.getById)
   app.post('/user/challenges/join', us_challenges.joinById)
-  app.post('/user/challenges/completed', us_challenges.getCompleted) //? my completed challenges
+  app.post('/user/challenges/start_team', us_challenges.startTeamById) //? start team challenge
+  app.post('/user/challenges/cancel', us_challenges.cancelById)
+  app.post('/user/challenges/complete', us_challenges.completeById)
+  app.post('/user/challenges/invitations', us_challenges.getInvitationsById)
+  app.post('/user/challenges/accept_invitation', us_challenges.acceptInvitation)
+  app.post('/user/challenges/decline_invitation', us_challenges.declineInvitation)
+  app.post('/user/challenges/cancel_invitation', us_challenges.cancelInvitation)
+
+  var USERS = require('./routes/user/users'),
+    users = new USERS(db)
+  // app.post('/user/users/list', users.getList)
+  app.post('/user/users/detail', users.getById)
+  app.post('/user/users/find', users.findByUsername)
+
+  var CHARITY_ACTS = require('./routes/user/charity_acts'),
+    charity_acts = new CHARITY_ACTS(db)
+  app.post('/user/charity_acts/list', charity_acts.getList)
+  app.post('/user/charity_acts/detail', charity_acts.getById)
+
+  var CHARITY_ORGS = require('./routes/user/charity_orgs'),
+    charity_orgs = new CHARITY_ORGS(db)
+  app.post('/user/charity_orgs/list', charity_orgs.getList)
+  app.post('/user/charity_orgs/detail', charity_orgs.getById)
+
+  var SPONSORS = require('./routes/user/sponsors'),
+    sponsors = new SPONSORS(db)
+  app.post('/user/sponsors/list', sponsors.getList)
+  app.post('/user/sponsors/detail', sponsors.getById)
+
+  var INTERESTS = require('./routes/user/interests'),
+    interests = new INTERESTS(db)
+  app.post('/user/interests/list', interests.getList)
+  app.post('/user/interests/detail', interests.getById)
 
 
 
@@ -237,31 +277,11 @@ MongoClient.connect(mongo_connect_url).then(client => {
    * Everyone routes 
    * 
    * ****************************/
-  var DATA = require('./routes/challenges'),
-    challenges = new DATA(db)
-  app.post('/challenges/list', challenges.getList)
-  app.post('/challenges/detail', challenges.getById)
-  app.post('/challenges/participants', challenges.getParticipants)
-
-  var USERS = require('./routes/users'),
-    users = new USERS(db)
-  app.post('/users/list', users.getList)
-  app.post('/users/detail', users.getById)
-
-  var CHARITY_ACTS = require('./routes/charity_acts'),
-    charity_acts = new CHARITY_ACTS(db)
-  app.post('/charity_acts/list', charity_acts.getList)
-  app.post('/charity_acts/detail', charity_acts.getById)
-
-  var CHARITY_ORGS = require('./routes/charity_orgs'),
-    charity_orgs = new CHARITY_ORGS(db)
-  app.post('/charity_orgs/list', charity_orgs.getList)
-  app.post('/charity_orgs/detail', charity_orgs.getById)
-
-  var SPONSORS = require('./routes/sponsors'),
-    sponsors = new SPONSORS(db)
-  app.post('/sponsors/list', sponsors.getList)
-  app.post('/sponsors/detail', sponsors.getById)
+  // var DATA = require('./routes/challenges'),
+  //   challenges = new DATA(db)
+  // app.post('/challenges/list', challenges.getList)
+  // app.post('/challenges/detail', challenges.getById)
+  // app.post('/challenges/participants', challenges.getParticipants)
 
 
   /* 

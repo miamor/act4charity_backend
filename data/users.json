@@ -1,172 +1,180 @@
-[{
-  "_id": {
-    "$oid": "6332acdd5ff4e47e2ec7711c"
-  },
-  "username": "shelly_bean",
-  "firstname": "Sheldon",
-  "lastname": "Cooper",
-  "email": "sheldon.cooper@gmail.com",
-  "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
-  "target": [
-    {
-      "time_frame": "day",
-      "goal": 5
-    }
-  ],
-  "current_donation": 47,
-  "current_reward": 100,
-  "interests": [
-    {
-      "$oid": "6332adcb5ff4e47e2ec77123"
+[
+  {
+    "_id": {
+      "$oid": "6332acdd5ff4e47e2ec7711c"
     },
-    {
-      "$oid": "6332adcb5ff4e47e2ec77124"
-    }
-  ],
-  "profile_picture": "https://img.icons8.com/color/2x/einstein.png",
-  "type": "user"
-},{
-  "_id": {
-    "$oid": "6332acdd5ff4e47e2ec7711d"
+    "username": "shelly_bean",
+    "firstname": "Sheldon",
+    "lastname": "Cooper",
+    "email": "sheldon.cooper@gmail.com",
+    "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
+    "target": [
+      {
+        "time_frame": "day",
+        "goal_donation": 50
+      }
+    ],
+    "current_donation": 47,
+    "current_reward": 100,
+    "interests": [
+      {
+        "$oid": "6332adcb5ff4e47e2ec77123"
+      },
+      {
+        "$oid": "6332adcb5ff4e47e2ec77124"
+      }
+    ],
+    "profile_picture": "https://img.icons8.com/color/2x/einstein.png",
+    "type": "user"
   },
-  "username": "lenny",
-  "firstname": "Leonard",
-  "lastname": "Hofstadter",
-  "email": "leonard.hofstadter@gmail.com",
-  "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
-  "target": [
-    {
-      "time_frame": "day",
-      "goal": 2
-    }
-  ],
-  "current_donation": 38,
-  "current_reward": 80,
-  "interests": [
-    {
-      "$oid": "6332adcb5ff4e47e2ec77124"
-    }
-  ],
-  "profile_picture": "https://img.icons8.com/color/2x/circled-user-male-skin-type-1-2.png",
-  "type": "user"
-},{
-  "_id": {
-    "$oid": "6332acdd5ff4e47e2ec7711e"
+  {
+    "_id": {
+      "$oid": "6332acdd5ff4e47e2ec7711d"
+    },
+    "username": "lenny",
+    "firstname": "Leonard",
+    "lastname": "Hofstadter",
+    "email": "leonard.hofstadter@gmail.com",
+    "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
+    "target": [
+      {
+        "time_frame": "day",
+        "goal_donation": 20
+      }
+    ],
+    "current_donation": 38,
+    "current_reward": 80,
+    "interests": [
+      {
+        "$oid": "6332adcb5ff4e47e2ec77124"
+      }
+    ],
+    "profile_picture": "https://img.icons8.com/color/2x/circled-user-male-skin-type-1-2.png",
+    "type": "user"
   },
-  "username": "froot_loops",
-  "firstname": "Howard",
-  "lastname": "Wolowitz",
-  "email": "howard.wolowitz@gmail.com",
-  "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
-  "target": [
-    {
-      "time_frame": "week",
-      "goal": 10
-    }
-  ],
-  "current_donation": 60,
-  "current_reward": 140,
-  "interests": [
-    {
-      "$oid": "6332adcb5ff4e47e2ec77127"
-    }
-  ],
-  "profile_picture": "https://img.icons8.com/color/2x/circled-user-male-skin-type-4.png",
-  "type": "user"
-},{
-  "_id": {
-    "$oid": "6332acdd5ff4e47e2ec7711f"
+  {
+    "_id": {
+      "$oid": "6332acdd5ff4e47e2ec7711e"
+    },
+    "username": "froot_loops",
+    "firstname": "Howard",
+    "lastname": "Wolowitz",
+    "email": "howard.wolowitz@gmail.com",
+    "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
+    "target": [
+      {
+        "time_frame": "week",
+        "goal_donation": 100
+      }
+    ],
+    "current_donation": 60,
+    "current_reward": 140,
+    "interests": [
+      {
+        "$oid": "6332adcb5ff4e47e2ec77127"
+      }
+    ],
+    "profile_picture": "https://img.icons8.com/color/2x/circled-user-male-skin-type-4.png",
+    "type": "user"
   },
-  "username": "raj",
-  "firstname": "Rajesh",
-  "lastname": "Koothrappali",
-  "email": "rajesh.koothrappali@gmail.com",
-  "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
-  "target": [
-    {
-      "time_frame": "fortnight",
-      "goal": 20
-    }
-  ],
-  "current_donation": 130,
-  "current_reward": 220,
-  "interests": [
-    {
-      "$oid": "6332adcb5ff4e47e2ec77128"
-    }
-  ],
-  "profile_picture": "https://img.icons8.com/color/2x/circled-user-male-skin-type-6.png",
-  "type": "user"
-},{
-  "_id": {
-    "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+  {
+    "_id": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "username": "raj",
+    "firstname": "Rajesh",
+    "lastname": "Koothrappali",
+    "email": "rajesh.koothrappali@gmail.com",
+    "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
+    "target": [
+      {
+        "time_frame": "fortnight",
+        "goal_donation": 200
+      }
+    ],
+    "current_donation": 130,
+    "current_reward": 220,
+    "interests": [
+      {
+        "$oid": "6332adcb5ff4e47e2ec77128"
+      }
+    ],
+    "profile_picture": "https://img.icons8.com/color/2x/circled-user-male-skin-type-6.png",
+    "type": "user"
   },
-  "username": "penny",
-  "firstname": "Penelope",
-  "lastname": "Hofstadter",
-  "email": "penelope.hofstadter@gmail.com",
-  "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
-  "target": [
-    {
-      "time_frame": "day",
-      "goal": 3
-    }
-  ],
-  "current_donation": 20,
-  "current_reward": 120,
-  "interests": [
-    {
-      "$oid": "6332adcb5ff4e47e2ec77127"
-    }
-  ],
-  "profile_picture": "https://img.icons8.com/color/2x/circled-user-female-skin-type-3.png",
-  "type": "user"
-},{
-  "_id": {
-    "$oid": "633d3d46b3b6bbb5d28ac2f4"
+  {
+    "_id": {
+      "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+    },
+    "username": "penny",
+    "firstname": "Penelope",
+    "lastname": "Hofstadter",
+    "email": "penelope.hofstadter@gmail.com",
+    "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
+    "target": [
+      {
+        "time_frame": "day",
+        "goal_donation": 30
+      }
+    ],
+    "current_donation": 20,
+    "current_reward": 120,
+    "interests": [
+      {
+        "$oid": "6332adcb5ff4e47e2ec77127"
+      }
+    ],
+    "profile_picture": "https://img.icons8.com/color/2x/circled-user-female-skin-type-3.png",
+    "type": "user"
   },
-  "username": "amy",
-  "firstname": "Amy",
-  "lastname": "Farrah Fowler",
-  "email": "amy.farrahfowler@gmail.com",
-  "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
-  "target": [
-    {
-      "time_frame": "day",
-      "goal": 4
-    }
-  ],
-  "current_donation": 16,
-  "current_reward": 90,
-  "interests": [
-    {
-      "$oid": "6332adcb5ff4e47e2ec77123"
-    }
-  ],
-  "profile_picture": "https://img.icons8.com/color/2x/circled-user-female-skin-type-4.png",
-  "type": "user"
-},{
-  "_id": {
-    "$oid": "633d3e84b3b6bbb5d28ac2f9"
+  {
+    "_id": {
+      "$oid": "633d3d46b3b6bbb5d28ac2f4"
+    },
+    "username": "amy",
+    "firstname": "Amy",
+    "lastname": "Farrah Fowler",
+    "email": "amy.farrahfowler@gmail.com",
+    "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
+    "target": [
+      {
+        "time_frame": "day",
+        "goal_donation": 40
+      }
+    ],
+    "current_donation": 16,
+    "current_reward": 90,
+    "interests": [
+      {
+        "$oid": "6332adcb5ff4e47e2ec77123"
+      }
+    ],
+    "profile_picture": "https://img.icons8.com/color/2x/circled-user-female-skin-type-4.png",
+    "type": "user"
   },
-  "username": "wildebeest",
-  "firstname": "Bernadette",
-  "lastname": "Rostenkowski",
-  "email": "bernadette.rostenkowski@gmail.com",
-  "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
-  "target": [
-    {
-      "time_frame": "week",
-      "goal": 30
-    }
-  ],
-  "current_donation": 60,
-  "current_reward": 220,
-  "interests": [
-    {
-      "$oid": "6332adcb5ff4e47e2ec77123"
-    }
-  ],
-  "profile_picture": "https://img.icons8.com/color/2x/circled-user-female-skin-type-1-2.png",
-  "type": "user"
-}]
+  {
+    "_id": {
+      "$oid": "633d3e84b3b6bbb5d28ac2f9"
+    },
+    "username": "wildebeest",
+    "firstname": "Bernadette",
+    "lastname": "Rostenkowski",
+    "email": "bernadette.rostenkowski@gmail.com",
+    "password": "$2a$10$lIC5AwDBTTgA0FjzSZZH..LdNDTfbMUY2SoIAo5S.sKOJlMt2cux2",
+    "target": [
+      {
+        "time_frame": "week",
+        "goal_donation": 300
+      }
+    ],
+    "current_donation": 60,
+    "current_reward": 220,
+    "interests": [
+      {
+        "$oid": "6332adcb5ff4e47e2ec77123"
+      }
+    ],
+    "profile_picture": "https://img.icons8.com/color/2x/circled-user-female-skin-type-1-2.png",
+    "type": "user"
+  }
+]

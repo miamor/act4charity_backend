@@ -1,0 +1,56 @@
+[
+  {
+    "challenge_id": {
+      "$oid": "633bb1514dcdb951373b47b1"
+    },
+    "users": [
+      {
+        "uid": {"$oid": "6332acdd5ff4e47e2ec7711c"},
+        "accept": 0
+      },
+      {
+        "uid": {"$oid": "6332acdd5ff4e47e2ec7711d"},
+        "accept": 0
+      },
+      {
+        "uid": {"$oid": "6332acdd5ff4e47e2ec7711e"},
+        "accept": 0
+      },
+      {
+        "uid": {"$oid": "6332acdd5ff4e47e2ec7711f"},
+        "accept": 0
+      },
+      {
+        "uid": {"$oid": "633d3c0bb3b6bbb5d28ac2ef"},
+        "accept": 0
+      }
+    ]
+  },
+  {
+    "challenge_id": {
+      "$oid": "63411e8f51f5da4de5bea410"
+    },
+    "users": [
+      {
+        "uid": {"$oid": "6332acdd5ff4e47e2ec7711c"},
+        "accept": 0
+      },
+      {
+        "uid": {"$oid": "6332acdd5ff4e47e2ec7711d"},
+        "accept": 0
+      },
+      {
+        "uid": {"$oid": "6332acdd5ff4e47e2ec7711e"},
+        "accept": 0
+      },
+      {
+        "uid": {"$oid": "6332acdd5ff4e47e2ec7711f"},
+        "accept": 0
+      },
+      {
+        "uid": {"$oid": "633d3c0bb3b6bbb5d28ac2ef"},
+        "accept": 0
+      }
+    ]
+  }
+]

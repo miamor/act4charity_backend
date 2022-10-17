@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
-const querier = require('../modules/querier')
-// const { challenge_builder } = require('../record_builder/challenge_builder') //! change this
+const querier = require('../../modules/querier')
+// const { challenge_builder } = require('../../record_builder/challenge_builder') //! change this
 
 module.exports = function (db) {
   var module = {}

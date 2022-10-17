@@ -1,0 +1,632 @@
+[
+  {
+    "_id": {
+      "$oid": "6341302b2a04c7976ece2862"
+    },
+    "challenge": {
+      "$oid": "633bac254dcdb951373b4772"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711c"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711c"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "6341308b2a04c7976ece2863"
+    },
+    "challenge": {
+      "$oid": "633baed94dcdb951373b4791"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711c"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711c"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "6341309e2a04c7976ece2864"
+    },
+    "challenge": {
+      "$oid": "633baff44dcdb951373b479e"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711c"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711c"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634130cc2a04c7976ece2865"
+    },
+    "challenge": {
+      "$oid": "633bb1514dcdb951373b47b1"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711c"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711c"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "6341313c2a04c7976ece2866"
+    },
+    "challenge": {
+      "$oid": "63411a6551f5da4de5bea3fa"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711d"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711d"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634131622a04c7976ece2867"
+    },
+    "challenge": {
+      "$oid": "63411d3651f5da4de5bea409"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711d"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711d"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "6341317b2a04c7976ece2868"
+    },
+    "challenge": {
+      "$oid": "63411d5e51f5da4de5bea40a"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711d"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711d"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634131892a04c7976ece2869"
+    },
+    "challenge": {
+      "$oid": "63411d8851f5da4de5bea40b"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711d"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711d"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "6341319b2a04c7976ece286a"
+    },
+    "challenge": {
+      "$oid": "63411da151f5da4de5bea40c"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711d"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711d"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634131d32a04c7976ece286b"
+    },
+    "challenge": {
+      "$oid": "63411dba51f5da4de5bea40d"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711e"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711e"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634131fc2a04c7976ece286c"
+    },
+    "challenge": {
+      "$oid": "63411dde51f5da4de5bea40e"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711e"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711e"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634132182a04c7976ece286d"
+    },
+    "challenge": {
+      "$oid": "63411dfa51f5da4de5bea40f"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711e"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711e"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634132392a04c7976ece286e"
+    },
+    "challenge": {
+      "$oid": "6336ceed6b8a9e1a18f210bd"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711e"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711e"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "6341328b2a04c7976ece286f"
+    },
+    "challenge": {
+      "$oid": "633bac254dcdb951373b4772"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711f"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634132c42a04c7976ece2870"
+    },
+    "challenge": {
+      "$oid": "633baed94dcdb951373b4791"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711f"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634132d62a04c7976ece2871"
+    },
+    "challenge": {
+      "$oid": "633baff44dcdb951373b479e"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711f"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634132ea2a04c7976ece2872"
+    },
+    "challenge": {
+      "$oid": "633bb1514dcdb951373b47b1"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711f"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634132f72a04c7976ece2873"
+    },
+    "challenge": {
+      "$oid": "63411a6551f5da4de5bea3fa"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711f"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634133042a04c7976ece2874"
+    },
+    "challenge": {
+      "$oid": "63411d3651f5da4de5bea409"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711f"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634133182a04c7976ece2875"
+    },
+    "challenge": {
+      "$oid": "63411d5e51f5da4de5bea40a"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711f"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634133242a04c7976ece2876"
+    },
+    "challenge": {
+      "$oid": "63411d8851f5da4de5bea40b"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711f"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711f"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634135742a04c7976ece287f"
+    },
+    "challenge": {
+      "$oid": "63411da151f5da4de5bea40c"
+    },
+    "user": {
+      "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+    },
+    "participants": [
+      {
+        "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634135912a04c7976ece2880"
+    },
+    "challenge": {
+      "$oid": "63411dba51f5da4de5bea40d"
+    },
+    "user": {
+      "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+    },
+    "participants": [
+      {
+        "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634135a32a04c7976ece2881"
+    },
+    "challenge": {
+      "$oid": "63411dde51f5da4de5bea40e"
+    },
+    "user": {
+      "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+    },
+    "participants": [
+      {
+        "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634135c12a04c7976ece2882"
+    },
+    "challenge": {
+      "$oid": "63411dfa51f5da4de5bea40f"
+    },
+    "user": {
+      "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+    },
+    "participants": [
+      {
+        "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634135ea2a04c7976ece2883"
+    },
+    "challenge": {
+      "$oid": "633bac254dcdb951373b4772"
+    },
+    "user": {
+      "$oid": "633d3d46b3b6bbb5d28ac2f4"
+    },
+    "participants": [
+      {
+        "$oid": "633d3d46b3b6bbb5d28ac2f4"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634136012a04c7976ece2884"
+    },
+    "challenge": {
+      "$oid": "633baed94dcdb951373b4791"
+    },
+    "user": {
+      "$oid": "633d3d46b3b6bbb5d28ac2f4"
+    },
+    "participants": [
+      {
+        "$oid": "633d3d46b3b6bbb5d28ac2f4"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634136322a04c7976ece2885"
+    },
+    "challenge": {
+      "$oid": "633baff44dcdb951373b479e"
+    },
+    "user": {
+      "$oid": "633d3e84b3b6bbb5d28ac2f9"
+    },
+    "participants": [
+      {
+        "$oid": "633d3e84b3b6bbb5d28ac2f9"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "634136492a04c7976ece2886"
+    },
+    "challenge": {
+      "$oid": "633bb1514dcdb951373b47b1"
+    },
+    "user": {
+      "$oid": "633d3e84b3b6bbb5d28ac2f9"
+    },
+    "participants": [
+      {
+        "$oid": "633d3e84b3b6bbb5d28ac2f9"
+      }
+    ],
+    "mode": "individual",
+    "active": 2
+  },
+  {
+    "_id": {
+      "$oid": "6336d4de6b8a9e1a18f21132"
+    },
+    "challenge": {
+      "$oid": "6336ceed6b8a9e1a18f210bd"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711c"
+    },
+    "participants": [
+      {
+        "$oid": "6332acdd5ff4e47e2ec7711c"
+      }
+    ],
+    "mode": "individual",
+    "active": 1
+  },
+  {
+    "_id": {
+      "$oid": "634133fd2a04c7976ece2877"
+    },
+    "challenge": {
+      "$oid": "633bac254dcdb951373b4772"
+    },
+    "user": {
+      "$oid": "6332acdd5ff4e47e2ec7711c"
+    },
+    "participants": [
+      {
+        "uid": {
+          "$oid": "6332acdd5ff4e47e2ec7711c"
+        },
+        "accept": 0
+      },
+      {
+        "uid": {
+          "$oid": "6332acdd5ff4e47e2ec7711d"
+        },
+        "accept": 0
+      },
+      {
+        "uid": {
+          "$oid": "6332acdd5ff4e47e2ec7711e"
+        },
+        "accept": 0
+      },
+      {
+        "uid": {
+          "$oid": "6332acdd5ff4e47e2ec7711f"
+        },
+        "accept": 0
+      }
+    ],
+    "mode": "team",
+    "active": 0
+  },
+  {
+    "_id": {
+      "$oid": "634136582a04c7976ece2887"
+    },
+    "challenge": {
+      "$oid": "63411a6551f5da4de5bea3fa"
+    },
+    "user": {
+      "$oid": "633d3e84b3b6bbb5d28ac2f9"
+    },
+    "participants": [
+      {
+        "$oid": "633d3e84b3b6bbb5d28ac2f9"
+      }
+    ],
+    "mode": "individual",
+    "active": 1
+  },
+  {
+    "_id": {
+      "$oid": "634136a32a04c7976ece2888"
+    },
+    "challenge": {
+      "$oid": "633cb899fb059e62a5cb725b"
+    },
+    "user": {
+      "$oid": "633d3d46b3b6bbb5d28ac2f4"
+    },
+    "participants": [
+      {
+        "uid": {
+          "$oid": "633d3d46b3b6bbb5d28ac2f4"
+        },
+        "accept": 0
+      },
+      {
+        "uid": {
+          "$oid": "633d3e84b3b6bbb5d28ac2f9"
+        },
+        "accept": 0
+      },
+      {
+        "uid": {
+          "$oid": "633d3c0bb3b6bbb5d28ac2ef"
+        },
+        "accept": 0
+      }
+    ],
+    "mode": "team",
+    "active": 0
+  }
+]

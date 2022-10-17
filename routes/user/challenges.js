@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
 const querier = require('../../modules/querier')
-// const { challenge_builder } = require('../record_builder/challenge_builder') //! change this
+// const { challenge_builder } = require('../../record_builder/challenge_builder') //! change this
+
 
 module.exports = function (db) {
   var module = {}
@@ -23,25 +24,6 @@ module.exports = function (db) {
     }
   }, {
     $lookup: {
-      from: "places",
-      let: { "place_id": "$place" },
-      pipeline: [{
-        $match: {
-          $expr: { 
-            $eq: ["$_id", "$$place_id"]
-          }
-        }
-      }],
-      as: "place_detail"
-    }
-  }, {
-    $unwind:
-    {
-      path: "$place_detail",
-      preserveNullAndEmptyArrays: false
-    }
-  }, {
-    $lookup: {
       from: "charities",
       let: { "charity_id": "$charity" },
       pipeline: [{
@@ -60,10 +42,51 @@ module.exports = function (db) {
       preserveNullAndEmptyArrays: true
     }
   }, {
+    $lookup: {
+      from: "sponsors",
+      let: { "sponsor_id": "$sponsor" },
+      pipeline: [{
+        $match: {
+          $expr: {
+            $eq: ["$_id", "$$sponsor_id"],
+          }
+        }
+      }],
+      as: "sponsor_detail"
+    }
+  }, {
+    $unwind:
+    {
+      path: "$sponsor_detail",
+      preserveNullAndEmptyArrays: true
+    }
+  }, {
     $project: {
       interest: 0,
       place: 0,
       charity: 0,
+      sponsor: 0,
+    }
+  }]
+
+  const agg_join_place_query = [{
+    $lookup: {
+      from: "places",
+      let: { "place_id": "$place" },
+      pipeline: [{
+        $match: {
+          $expr: {
+            $eq: ["$_id", "$$place_id"]
+          }
+        }
+      }],
+      as: "place_detail"
+    }
+  }, {
+    $unwind:
+    {
+      path: "$place_detail",
+      preserveNullAndEmptyArrays: false
     }
   }]
 
@@ -82,7 +105,7 @@ module.exports = function (db) {
       }
     }]
     aggAr = [...aggAr, ...agg_join_query]
-    
+
     return querier.getByAggQuery(req, res, aggAr)
   }
 
@@ -108,7 +131,7 @@ module.exports = function (db) {
   module.getList = async function (req, res) {
     querier.collection_name = collection_name
 
-    var params = req.body
+    const params = req.body
     // console.log('params', params)
 
     if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
@@ -118,30 +141,234 @@ module.exports = function (db) {
       })
     }
 
-    var filter = params.filter,
+    const filter = params.filter,
       page = params.page || 1,
       num_per_page = params.num_per_page || 10,
       do_count = params.do_count || true
 
 
-    var aggAr = agg_join_query
+    var aggQ = agg_join_query
 
-    console.log('aggAr', aggAr)
+    console.log('aggAr', aggQ)
 
 
-    return querier.getListAdvanced(res, filter, aggAr, page, num_per_page, do_count)
+    return querier.getListAdvanced(res, filter, aggQ, page, num_per_page, do_count)
   }
 
 
 
   /* ****************************
    * 
-   * Retrieve my completed challenges
+   * Filter `walk`
+   * 
+   * ****************************/
+  module.getListWalk = async function (req, res) {
+    querier.collection_name = collection_name
+
+    const params = req.body
+
+    if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
+      return res.send({
+        status: 'error',
+        message: 'Missing params'
+      })
+    }
+
+    const filter = params.filter,
+      page = params.page || 1,
+      num_per_page = params.num_per_page || 10,
+      do_count = params.do_count || true
+
+
+    var matchAr = []
+
+    /*
+     * Find by user's filter
+     */
+    for (const [k, v] of Object.entries(filter)) {
+      console.log(k, v)
+      if (v != null && v.length > 0) {
+        matchAr.push({ [k]: { $eq: v } })
+      }
+    }
+    console.log('matchAr', matchAr)
+
+
+    var aggAr = []
+
+    if (matchAr.length > 0) {
+      aggAr.push({
+        $match: {
+          $and: matchAr
+        }
+      })
+    }
+
+
+    aggAr = [...aggAr, ...agg_join_query]
+
+
+    /*
+     * Pagination
+     */
+    aggAr.push({
+      $facet: {
+        paginatedResults: [{ $skip: (page - 1) * num_per_page }, { $limit: num_per_page }],
+        totalCount: [
+          {
+            $count: 'total'
+          }
+        ]
+      }
+    })
+
+    console.log('aggAr', JSON.stringify(aggAr))
+
+
+
+    const TheCollection = db.collection(collection_name)
+    const items = await TheCollection.aggregate(aggAr).toArray()
+
+    return res.send({
+      status: 'success',
+      data: items[0].paginatedResults,
+      total: do_count ? (items[0].totalCount.length > 0 ? items[0].totalCount[0].total : 0) : -1
+    })
+  }
+
+
+
+
+  /* ****************************
+   * 
+   * Filter `discover` by distance
+   * 
+   * ****************************/
+  module.getListDiscover = async function (req, res) {
+    querier.collection_name = collection_name
+
+    const params = req.body
+
+    if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
+      return res.send({
+        status: 'error',
+        message: 'Missing params'
+      })
+    }
+
+    const filter = params.filter,
+      page = params.page || 1,
+      num_per_page = params.num_per_page || 10,
+      do_count = params.do_count || true
+
+    if (!filter.hasOwnProperty('user_loc') && !filter.hasOwnProperty('distance')) {
+      return res.status(500).send({})
+    }
+
+    const user_loc = filter.user_loc
+    const distance = filter.distance
+
+    // console.log('>>>> user_loc', user_loc)
+
+    /* 
+     * Find places within distance
+     */
+    var places_ids = []
+    if (distance > 0) {
+      const filterPlacesQuery = {
+        location: {
+          $near: {
+            $geometry: { type: "Point", coordinates: user_loc },
+            $minDistance: 0,
+            $maxDistance: distance
+          }
+        }
+      }
+      // console.log('>>> filterPlacesQuery', JSON.stringify(filterPlacesQuery))
+
+      const places = await db.collection('places').find(filterPlacesQuery, { _id: 1 }).toArray()
+      places_ids = places.map(place => ObjectId(place._id))
+    }
+
+    console.log('>>> places_ids', places_ids)
+
+
+    /*
+     * Find challenges to discover those places
+     */
+    var matchAr = []
+    if (places_ids.length > 0) {
+      matchAr.push({
+        place: { $in: places_ids }
+      })
+    }
+
+    /*
+     * Find by user's filter
+     */
+    for (const [k, v] of Object.entries(filter)) {
+      if (k != 'user_loc' && k != 'distance') {
+        console.log(k, v)
+        if (v != null && v.length > 0) {
+          matchAr.push({ [k]: { $eq: v } })
+        }
+      }
+    }
+    console.log('matchAr', matchAr)
+
+
+    var aggAr = []
+
+    if (matchAr.length > 0) {
+      aggAr.push({
+        $match: {
+          $and: matchAr
+        }
+      })
+    }
+
+
+    aggAr = [...aggAr, ...agg_join_place_query, ...agg_join_query]
+
+
+    /*
+     * Pagination
+     */
+    aggAr.push({
+      $facet: {
+        paginatedResults: [{ $skip: (page - 1) * num_per_page }, { $limit: num_per_page }],
+        totalCount: [
+          {
+            $count: 'total'
+          }
+        ]
+      }
+    })
+
+    console.log('aggAr', JSON.stringify(aggAr))
+
+
+
+    const TheCollection = db.collection(collection_name)
+    const items = await TheCollection.aggregate(aggAr).toArray()
+
+    return res.send({
+      status: 'success',
+      data: items[0].paginatedResults,
+      total: do_count ? (items[0].totalCount.length > 0 ? items[0].totalCount[0].total : 0) : -1
+    })
+  }
+
+
+
+  /* ****************************
+   * 
+   * Retrieve all completed challenges
    * 
    * ****************************/
   module.getCompleted = async function (req, res) {
     querier.collection_name = collection_name
-    
+
     return res.send({})
   }
 
@@ -154,8 +381,167 @@ module.exports = function (db) {
    * ****************************/
   module.getParticipants = async function (req, res) {
     querier.collection_name = collection_name
-    
+
     return res.send({})
+  }
+
+
+
+  /* ****************************
+   * 
+   * Retrieve invitations list by challenge_accepted_id
+   * This is also to retrieve members accept status
+   * 
+   * ****************************/
+  module.getInvitationsById = async function (req, res) {
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+
+    const InvCollection = db.collection('challenge_invitation')
+    const invitations = await InvCollection.find({ challenge_accepted: challenge_accepted_id }).toArray()
+
+    console.log('challenge_accepted_id', challenge_accepted_id)
+    console.log('invitations', invitations)
+
+    return res.send({
+      status: 'success',
+      data: invitations
+    })
+  }
+
+
+  /* ****************************
+   * 
+   * Accept an invitation to join a team challenge
+   * 
+   * ****************************/
+  module.acceptInvitation = async function (req, res) {
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    const user_id = ObjectId(req.user.id)
+
+    const InvCollection = db.collection('challenge_invitation')
+    const updateStt = await InvCollection.updateOne({
+      challenge_accepted: challenge_accepted_id,
+      to_uid: user_id,
+    }, {
+      $set: { accept: 1 }
+    })
+
+    return res.send({
+      status: 'success',
+      data: updateStt
+    })
+  }
+
+  /* ****************************
+   * 
+   * Decline an invitation
+   * 
+   * ****************************/
+  module.declineInvitation = async function (req, res) {
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    const user_id = ObjectId(req.user.id)
+
+    const InvCollection = db.collection('challenge_invitation')
+    const updateStt = await InvCollection.updateOne({
+      challenge_accepted: challenge_accepted_id,
+      to_uid: user_id,
+    }, {
+      $set: { accept: -1 }
+    })
+
+    return res.send({
+      status: 'success',
+      data: updateStt
+    })
+  }
+
+  /* ****************************
+   * 
+   * Cancel an invitation (accepted, joined the challenge but then cancel)
+   * 
+   * ****************************/
+  module.cancelInvitation = async function (req, res) {
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    const user_id = ObjectId(req.user.id)
+
+    const InvCollection = db.collection('challenge_invitation')
+    const updateStt = await InvCollection.updateOne({
+      challenge_accepted: challenge_accepted_id,
+      to_uid: user_id,
+    }, {
+      $set: { accept: -2 }
+    })
+
+    return res.send({
+      status: 'success',
+      data: updateStt
+    })
+  }
+
+
+  /* ****************************
+   * 
+   * Cancel by challenge id
+   * 
+   * ****************************/
+  module.cancelById = async function (req, res) {
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    const user_id = ObjectId(req.user.id)
+
+    const TheCollection = db.collection('challenge_accepted')
+    const updateStt = await TheCollection.updateOne({
+      _id: { $eq: challenge_accepted_id },
+      user: { $eq: user_id },
+      active: { $eq: 1 }
+    }, {
+      $set: {
+        active: -1 //? cancel
+      }
+    })
+
+    return res.send({
+      status: 'success',
+      data: updateStt
+    })
+  }
+
+
+
+  /* ****************************
+   * 
+   * Complete by challenge id
+   * 
+   * ****************************/
+  module.completeById = async function (req, res) {
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    const user_id = ObjectId(req.user.id)
+
+    /*
+     * Check if the user really completed the challenge
+     */
+
+
+    const TheCollection = db.collection('challenge_accepted')
+    const updateStt = await TheCollection.updateOne({
+      _id: { $eq: challenge_accepted_id },
+      user: { $eq: user_id },
+      active: { $eq: 1 }
+    }, {
+      $set: {
+        active: 2 //? finished
+      }
+    })
+
+    console.log({
+      _id: { $eq: challenge_accepted_id },
+      user: { $eq: user_id },
+      active: { $eq: 1 }
+    })
+
+    return res.send({
+      status: 'success',
+      data: updateStt
+    })
   }
 
 
@@ -167,46 +553,115 @@ module.exports = function (db) {
    * ****************************/
   module.joinById = async function (req, res) {
     querier.collection_name = collection_name
-    
-    var mode = req.body.mode //? individual | team
-    var challenge_id = ObjectId(req.body.challenge_id) //? challenge_id
-    var participants = req.body.participants //? [..., ...] list of participants (user id) | if it's 
 
-    const insert_data = {
+    //? individual | team
+    const mode = req.body.mode
+    //? challenge_id
+    const challenge_id = ObjectId(req.body.challenge_id)
+    //? [..., ...] list of participants (user id) | if it's 
+    const participants = req.body.participants.map(x => ObjectId(x))
+    //? user id
+    const user_id = ObjectId(req.user.id)
+
+    var insert_data = {
       challenge: challenge_id,
-      users: participants,
+      user: user_id,
+      participants: participants,
       mode: mode,
 
-      //? 1: is in this challenge 
-      //? 0: being called for challenge. As in team challenge, when a user invites users, this request will be created with active = 0. When all users accept to join the team (click Accept) this active field will be set to 1
+      //? 1: is in challenge (in participating)
+      //? 0: waiting to start (in casee of team)
       //? -1: cancel
       //? 2: finished
       active: 1
     }
 
+
     /*
      * Add to challenge_accepted table
      */
     const TheCollection = db.collection('challenge_accepted')
-    try {
-      const inserted_data = await TheCollection.insertOne(insert_data, { safe: true })
-      return res.send({
-        status: 'success',
-        data: insert_data
+    const inserted_data = await TheCollection.insertOne(insert_data, { safe: true })
+    // console.log('[joinById] >>> inserted_data', inserted_data)
+
+
+    let participants_details = [{
+      _id: user_id,
+      username: req.user.username
+    }]
+
+    /*
+     * If team mode: send invitation to other participants
+     */
+    if (mode == 'team') {
+      insert_data.active = 0
+
+      //? send invitation
+      participants.forEach(async (to) => {
+        const invitation_data = {
+          challenge_accepted: inserted_data.insertedId,
+          challenge: challenge_id, //? actually redundant
+          from_uid: user_id,
+          to_uid: to,
+          accept: 0,
+        }
+        console.log('>> invitation_data', invitation_data)
+        const InvCollection = db.collection('challenge_invitation')
+        await InvCollection.insertOne(invitation_data, { safe: true })
       })
+
+      /*
+       * Get participants info
+       */
+      const UserCollection = db.collection('challenge_accepted')
+      participants_details = await UserCollection.find({ _id: { $in: participants } }).project({ username: 1, firstname: 1, lastname: 1, _id: 1, profile_picture: 1 }).toArray()
     }
-    catch (error) {
-      return res.status(500).send({
-        status: 'error',
-        message: JSON.stringify(error)
-      })
-    }
+
 
     return res.send({
       status: 'success',
-      data: {}
+      data: {
+        ...insert_data,
+        _id: inserted_data.insertedId,
+        participants_details: participants_details
+      }
     })
   }
+
+
+
+  /* ****************************
+   * 
+   * A host click start challenge
+   * delete all unaccepted invitations
+   * 
+   * ****************************/
+  module.startTeamById = async function (req, res) {
+    //? challenge_accepted_id
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    //? user id
+    const user_id = ObjectId(req.user.id)
+
+    const InvCollection = db.collection('challenge_invitation')
+    await InvCollection.deleteMany({
+      challenge_accepted: challenge_accepted_id,
+      accept: { $lte: 0 }
+    })
+
+    const TheCollection = db.collection('challenge_accepted')
+    const updateStt = await TheCollection.updateOne({
+      _id: challenge_accepted_id,
+      user: user_id
+    }, {
+      $set: { active: 1 }
+    })
+
+    return res.send({
+      status: 'success',
+      data: updateStt
+    })
+  }
+
 
 
   return module

@@ -1,0 +1,22 @@
+[{
+    "name": "Discover Simple Place",
+    "type": "discover",
+    "charity": {
+      "$oid": "633cb899fb059e62a5cb725b"
+    },
+    "interest": [
+      {
+        "$oid": "6332adcb5ff4e47e2ec77126"
+      }
+    ],
+    "sponsor": {
+      "$oid": "633ce11dfb059e62a5cb7282"
+    },
+    "distance": 0,
+    "donation": 0,
+    "time": 0,
+    "reward": 0,
+    "place": {
+      "$oid": "6348dfbcd7ad8e409d4955c6"
+    }
+  }]

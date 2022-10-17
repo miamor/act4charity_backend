@@ -1,12 +1,12 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
-const querier = require('../modules/querier')
-// const { user_builder } = require('../record_builder/user_builder') //! change this
+const querier = require('../../modules/querier')
+// const { charity_act_builder } = require('../../record_builder/charity_act_builder') //! change this
 
 module.exports = function (db) {
   var module = {}
 
   querier.db = db
-  const collection_name = 'users' //! change this
+  const collection_name = 'interests' //! change this
 
 
   /* ****************************
