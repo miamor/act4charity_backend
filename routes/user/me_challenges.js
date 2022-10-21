@@ -116,7 +116,7 @@ module.exports = function (db) {
 
     const filter = params.filter,
       page = params.page || 1,
-      num_per_page = params.num_per_page || 10,
+      num_per_page = params.num_per_page || 100,
       do_count = params.do_count || true
 
     /*
@@ -217,7 +217,7 @@ module.exports = function (db) {
 
     const filter = params.filter,
       page = params.page || 1,
-      num_per_page = params.num_per_page || 10,
+      num_per_page = params.num_per_page || 100,
       do_count = params.do_count || true
 
     /*
@@ -322,7 +322,7 @@ module.exports = function (db) {
 
     const filter = params.filter,
       page = params.page || 1,
-      num_per_page = params.num_per_page || 10,
+      num_per_page = params.num_per_page || 100,
       do_count = params.do_count || true
 
     /*

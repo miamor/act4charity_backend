@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
 const querier = require('../../modules/querier')
+const uploader = require('../../modules/uploader')
 // const { challenge_builder } = require('../../record_builder/challenge_builder') //! change this
 
 
@@ -67,6 +68,8 @@ module.exports = function (db) {
       charity: 0,
       sponsor: 0,
     }
+  }, {
+    $sort: { _id: -1 }
   }]
 
   const agg_join_place_query = [{
@@ -515,12 +518,17 @@ module.exports = function (db) {
   module.completeById = async function (req, res) {
     const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
     const user_id = ObjectId(req.user.id)
+    const challenge_reward = req.body.challenge_reward || 0
+    const challenge_donation = req.body.challenge_donation || 0
 
     /*
      * Check if the user really completed the challenge
      */
 
 
+    /*
+     * Update challenge_accepted active status
+     */
     const TheCollection = db.collection('challenge_accepted')
     const updateStt = await TheCollection.updateOne({
       _id: { $eq: challenge_accepted_id },
@@ -532,11 +540,28 @@ module.exports = function (db) {
       }
     })
 
-    console.log({
-      _id: { $eq: challenge_accepted_id },
-      user: { $eq: user_id },
-      active: { $eq: 1 }
-    })
+
+    /* 
+     * Update user current_reward and current_donation
+     */
+    if (challenge_reward > 0 && challenge_donation > 0) {
+      const UserCollection = db.collection('users')
+      const user_updateStt = await UserCollection.updateOne({
+        _id: { $eq: user_id }
+      }, {
+        $inc: {
+          current_reward: challenge_reward,
+          current_donation: challenge_donation,
+        }
+      })
+    }
+
+
+    // console.log({
+    //   _id: { $eq: challenge_accepted_id },
+    //   user: { $eq: user_id },
+    //   active: { $eq: 1 }
+    // })
 
     return res.send({
       status: 'success',
@@ -659,6 +684,118 @@ module.exports = function (db) {
     return res.send({
       status: 'success',
       data: updateStt
+    })
+  }
+
+
+
+
+  /* ****************************
+   * 
+   * Share picture / status during journey
+   * 
+   * ****************************/
+  module.shareStory = async function (req, res) {
+    //? challenge_id
+    const challenge_id = ObjectId(req.body.challenge_id)
+    //? challenge_accepted_id
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    //? user id
+    const user_id = ObjectId(req.user.id)
+
+    const public = req.body.public === "false" ? false : true
+
+    /*
+     * first upload files
+     */
+    var upload_res = uploader.uploadFiles(req, res)
+    if (upload_res.status === 'error') {
+      return res.send({
+        status: 'error',
+        message: upload_res
+      })
+    }
+
+    files_data = upload_res.data
+
+
+    /* 
+     * Get path to the uploaded file
+     */
+    const filepath = files_data[0].file_path
+    const file_urlpath = 'http://149.28.157.194:5006/' + filepath.split('/uploads/')[1]
+
+
+    /*
+     * Add to db
+     */
+    let insert_data = {
+      picture: file_urlpath,
+      content: req.body.content,
+      challenge_accepted: challenge_accepted_id,
+      challenge: challenge_id,
+      user: user_id,
+      public: public
+    }
+    const TheCollection = db.collection('challenge_story')
+    const inserted_data = await TheCollection.insertOne(insert_data, { safe: true })
+
+
+    return res.send({
+      status: 'success',
+      data: {
+        ...insert_data,
+        _id: inserted_data.insertedId
+      }
+    })
+  }
+
+
+
+  /* ****************************
+   * 
+   * List challenge_story
+   * 
+   * ****************************/
+  module.listStory = async function (req, res) {
+    //? challenge_accepted_id
+    const challenge_id = ObjectId(req.body.challenge_id)
+
+    const TheCollection = db.collection('challenge_story')
+    const items = await TheCollection.aggregate([{
+      $match: {
+        $and: [{
+          challenge: { $eq: challenge_id }
+        }, {
+          public: true
+        }]
+      }
+    }, {
+      $lookup: {
+        from: "users",
+        let: { "user_id": "$user" },
+        pipeline: [{
+          $match: {
+            $expr: {
+              $eq: ["$_id", "$$user_id"],
+            }
+          }
+        }],
+        as: "user_detail"
+      }
+    }, {
+      $unwind: {
+        path: "$user_detail",
+        preserveNullAndEmptyArrays: false
+      }
+    }, {
+      $sort: { _id: -1 }
+    }]).toArray()
+
+
+    return res.send({
+      status: 'success',
+      data: items
     })
   }
 

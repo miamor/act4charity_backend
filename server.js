@@ -243,6 +243,8 @@ MongoClient.connect(mongo_connect_url).then(client => {
   app.post('/user/challenges/accept_invitation', us_challenges.acceptInvitation)
   app.post('/user/challenges/decline_invitation', us_challenges.declineInvitation)
   app.post('/user/challenges/cancel_invitation', us_challenges.cancelInvitation)
+  app.post('/user/challenges/share_story', us_challenges.shareStory)
+  app.post('/user/challenges/list_story', us_challenges.listStory)
 
   var USERS = require('./routes/user/users'),
     users = new USERS(db)

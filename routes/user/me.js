@@ -70,7 +70,14 @@ module.exports = function (db) {
     // delete users._id
 
     // const userJson = user_builder(req.body)
-    const userJson = req.body
+    let userJson = req.body
+    if (userJson.interests != null) {
+      userJson.interests = userJson.interests.map(x => ObjectId(x))
+    }
+    delete userJson._id
+    delete userJson.username
+    delete userJson.password
+    delete userJson.email
 
     return querier.updateOne(req, res, userJson, { _id: ObjectId(loggedUser.id) })
   }
@@ -89,6 +96,7 @@ module.exports = function (db) {
     /*
      * first upload files
      */
+    console.log('calling uploader.uploadFiles ~~~~~~~~~')
     var upload_res = uploader.uploadFiles(req, res)
     if (upload_res.status === 'error') {
       return res.send({
@@ -106,11 +114,13 @@ module.exports = function (db) {
     // const filepaths = files_data.map(file_data => file_data.file_path)
     const filepath = files_data[0].file_path
 
+    const file_urlpath = 'http://149.28.157.194:5006/'+filepath.split('/uploads/')[1]
+
 
     /* 
      * Update database
      */
-    return querier.updateOne(req, res, { avatar: filepath }, { _id: ObjectId(loggedUser.id) })
+    return querier.updateOne(req, res, { avatar: file_urlpath }, { _id: ObjectId(loggedUser.id) })
   }
 
 

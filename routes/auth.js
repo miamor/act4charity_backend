@@ -6,12 +6,12 @@ module.exports = function (db) {
 
   // Handling user signup
   module.register = async function (req, res) {
-    var users = req.body
-    const password = users.password
-    console.log('[register] users', checkUserEmail)
+    const user_info = req.body
+    const password = user_info.password
+    console.log('[register] user_info', checkUserEmail)
 
     const UsersCollection = db.collection('users')
-    var checkUserEmail = await UsersCollection.findOne({ email: users.email })
+    var checkUserEmail = await UsersCollection.findOne({ email: user_info.email })
     console.log('checkUserEmail', checkUserEmail)
     if (checkUserEmail != null) {
       return res.send({
@@ -20,13 +20,15 @@ module.exports = function (db) {
       })
     }
 
-    var checkUsername = await UsersCollection.findOne({ username: users.username })
+    const checkUsername = await UsersCollection.findOne({ username: user_info.username })
     if (checkUsername != null) {
       return res.send({
         status: 'error',
         message: 'Username not available.'
       })
     }
+
+    // const interests = user_info.interests.map(x => ObjectId(x))
 
     try {
       // Encryption of the string password
@@ -46,15 +48,16 @@ module.exports = function (db) {
           console.log(hash)
 
           const user = await UsersCollection.insertOne({
-            email: users.email,
-            username: users.username,
+            email: user_info.email,
+            username: user_info.username,
             password: hashedPassword,
             type: 'user',
             // premium: 0,
-            // point: 5,
-            // bcoin: 10,
-            // avatar: 'http://192.168.1.14/Asd7tr0Chy7481alkrt/avatar/c1.jpg',
-            first_name: users.username
+            current_reward: 5,
+            current_donation: 0,
+            avatar: 'http://149.28.157.194:5006/logo.png',
+            first_name: user_info.first_name,
+            interests: [],
           })
 
           response = {
@@ -78,15 +81,15 @@ module.exports = function (db) {
 
 
   module.login = async function (req, res) {
-    var users = req.body
-    const password = users.password
+    const user_info = req.body
+    const password = user_info.password
 
-    console.log('Login as: ' + JSON.stringify(users))
+    console.log('Login as: ' + JSON.stringify(user_info))
 
     const UsersCollection = db.collection('users')
 
     // try {
-    var user = await UsersCollection.findOne({ username: users.username })
+    var user = await UsersCollection.findOne({ username: user_info.username })
 
     console.log('Success: ' + JSON.stringify(user))
     //var token = crypto.randomBytes(64).toString('hex')
