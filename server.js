@@ -246,6 +246,12 @@ MongoClient.connect(mongo_connect_url).then(client => {
   app.post('/user/challenges/share_story', us_challenges.shareStory)
   app.post('/user/challenges/list_story', us_challenges.listStory)
 
+  var FEEDS = require('./routes/user/feeds'),
+    feeds = new FEEDS(db)
+  app.post('/user/feeds/list', feeds.getList)
+  app.post('/user/feeds/detail', feeds.getById)
+  app.post('/user/feeds/share', feeds.share)
+
   var USERS = require('./routes/user/users'),
     users = new USERS(db)
   // app.post('/user/users/list', users.getList)

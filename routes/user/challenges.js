@@ -521,6 +521,7 @@ module.exports = function (db) {
     const challenge_reward = req.body.challenge_reward || 0
     const challenge_donation = req.body.challenge_donation || 0
 
+
     /*
      * Check if the user really completed the challenge
      */
@@ -541,13 +542,20 @@ module.exports = function (db) {
     })
 
 
+    /*
+     * Get participants lists
+     */
+    //! right now just simply use this. but really should not. should retrieve from db instead
+    const participants = req.body.participants.map(x => ObjectId(x))
+
+
     /* 
      * Update user current_reward and current_donation
      */
     if (challenge_reward > 0 && challenge_donation > 0) {
       const UserCollection = db.collection('users')
-      const user_updateStt = await UserCollection.updateOne({
-        _id: { $eq: user_id }
+      const user_updateStt = await UserCollection.updateMany({
+        _id: { $in: participants }
       }, {
         $inc: {
           current_reward: challenge_reward,
