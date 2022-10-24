@@ -72,6 +72,7 @@ module.exports = function (db) {
     // const userJson = user_builder(req.body)
     let userJson = req.body
     if (userJson.interests != null) {
+      console.log('userJson.interests', userJson.interests)
       userJson.interests = userJson.interests.map(x => ObjectId(x))
     }
     delete userJson._id
@@ -98,11 +99,9 @@ module.exports = function (db) {
      */
     console.log('calling uploader.uploadFiles ~~~~~~~~~')
     var upload_res = uploader.uploadFiles(req, res)
+    console.log('upload_res =', upload_res)
     if (upload_res.status === 'error') {
-      return res.send({
-        status: 'error',
-        message: upload_res
-      })
+      return res.send(upload_res)
     }
 
     files_data = upload_res.data

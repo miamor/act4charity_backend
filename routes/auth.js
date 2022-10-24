@@ -56,7 +56,7 @@ module.exports = function (db) {
             current_reward: 5,
             current_donation: 0,
             avatar: 'http://149.28.157.194:5006/logo.png',
-            first_name: user_info.first_name,
+            firstname: user_info.firstname,
             interests: [],
           })
 

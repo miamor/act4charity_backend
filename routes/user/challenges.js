@@ -86,10 +86,9 @@ module.exports = function (db) {
       as: "place_detail"
     }
   }, {
-    $unwind:
-    {
+    $unwind: {
       path: "$place_detail",
-      preserveNullAndEmptyArrays: false
+      preserveNullAndEmptyArrays: true
     }
   }]
 
@@ -131,7 +130,7 @@ module.exports = function (db) {
    *  If no filter, parse null
    * 
    * ****************************/
-  module.getList = async function (req, res) {
+  module.getList_old = async function (req, res) {
     querier.collection_name = collection_name
 
     const params = req.body
@@ -277,7 +276,7 @@ module.exports = function (db) {
      * Find places within distance
      */
     var places_ids = []
-    if (distance > 0) {
+    if (distance > 0 && user_loc != null && user_loc.length === 2) {
       const filterPlacesQuery = {
         location: {
           $near: {
@@ -329,6 +328,155 @@ module.exports = function (db) {
         }
       })
     }
+
+
+    aggAr = [...aggAr, ...agg_join_place_query, ...agg_join_query]
+
+
+    /*
+     * Pagination
+     */
+    aggAr.push({
+      $facet: {
+        paginatedResults: [{ $skip: (page - 1) * num_per_page }, { $limit: num_per_page }],
+        totalCount: [
+          {
+            $count: 'total'
+          }
+        ]
+      }
+    })
+
+    console.log('aggAr', JSON.stringify(aggAr))
+
+
+
+    const TheCollection = db.collection(collection_name)
+    const items = await TheCollection.aggregate(aggAr).toArray()
+
+    return res.send({
+      status: 'success',
+      data: items[0].paginatedResults,
+      total: do_count ? (items[0].totalCount.length > 0 ? items[0].totalCount[0].total : 0) : -1
+    })
+  }
+
+
+
+
+  /* ****************************
+   * 
+   * Get both `discover` and `walk`, filter by distance
+   * 
+   * ****************************/
+  module.getList = async function (req, res) {
+    querier.collection_name = collection_name
+
+    const params = req.body
+
+    if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
+      return res.send({
+        status: 'error',
+        message: 'Missing params'
+      })
+    }
+
+    const filter = params.filter,
+      page = params.page || 1,
+      num_per_page = params.num_per_page || 10,
+      do_count = params.do_count || true
+
+    if (!filter.hasOwnProperty('user_loc') && !filter.hasOwnProperty('distance')) {
+      return res.status(500).send({})
+    }
+
+    const user_loc = filter.user_loc
+    const distance = filter.distance
+    const interests = filter.interests
+
+    // console.log('>>>> user_loc', user_loc)
+
+
+    var discoverOptions = [
+      { type: { $eq: 'discover' } },
+      // { place: { $in: places_ids } }
+    ]
+    var walkOptions = [
+      { type: { $eq: 'walk' } },
+      // { distance: { $lte: distance } }
+    ]
+
+
+    if (distance > 0) {
+      walkOptions.push({ distance: { $lte: distance } })
+    }
+
+
+    /* 
+     * Find places within distance
+     */
+    var places_ids = []
+    if (distance > 0 && user_loc != null && user_loc.length === 2) {
+      const filterPlacesQuery = {
+        location: {
+          $near: {
+            $geometry: { type: "Point", coordinates: user_loc },
+            $minDistance: 0,
+            $maxDistance: distance * 1000 //? in meters
+          }
+        }
+      }
+      // console.log('>>> filterPlacesQuery', JSON.stringify(filterPlacesQuery))
+
+      const places = await db.collection('places').find(filterPlacesQuery, { _id: 1 }).toArray()
+      places_ids = places.map(place => ObjectId(place._id))
+    }
+
+    console.log('>>> places_ids', places_ids)
+
+
+    /*
+     * Find challenges to discover those places
+     */
+    var matchAr = []
+    if (places_ids.length > 0) {
+      discoverOptions.push({ place: { $in: places_ids } })
+    }
+
+
+    var aggAr = []
+
+
+    var matchAndAr = [{
+      $or: [{
+        $and: walkOptions
+      }, {
+        $and: discoverOptions
+      }]
+    }]
+
+
+    /*
+     * Filter by interests
+     */
+    if (interests != null) {
+      const interests_conds = interests.map(x => {
+        return { interest: ObjectId(x) }
+      })
+      matchAndAr.push({
+        $or: interests_conds
+      })
+    }
+    console.log('matchAndAr', matchAndAr)
+
+
+    aggAr.push({
+      $match: {
+        $and: matchAndAr
+      }
+    })
+
+    console.log('aggAr', aggAr)
 
 
     aggAr = [...aggAr, ...agg_join_place_query, ...agg_join_query]
@@ -546,23 +694,28 @@ module.exports = function (db) {
      * Get participants lists
      */
     //! right now just simply use this. but really should not. should retrieve from db instead
-    const participants = req.body.participants.map(x => ObjectId(x))
+    if (req.body.participants != null) {
+      const participants = req.body.participants.map(x => ObjectId(x))
 
-
-    /* 
-     * Update user current_reward and current_donation
-     */
-    if (challenge_reward > 0 && challenge_donation > 0) {
-      const UserCollection = db.collection('users')
-      const user_updateStt = await UserCollection.updateMany({
-        _id: { $in: participants }
-      }, {
-        $inc: {
-          current_reward: challenge_reward,
-          current_donation: challenge_donation,
-        }
-      })
+      console.log('participants', participants)
+      console.log('challenge_reward', challenge_reward)
+      console.log('challenge_donation', challenge_donation)
+      /* 
+       * Update user current_reward and current_donation
+       */
+      if (challenge_reward > 0 || challenge_donation > 0) {
+        const UserCollection = db.collection('users')
+        const user_updateStt = await UserCollection.updateMany({
+          _id: { $in: participants }
+        }, {
+          $inc: {
+            current_reward: challenge_reward,
+            current_donation: challenge_donation,
+          }
+        })
+      }
     }
+
 
 
     // console.log({
@@ -787,6 +940,13 @@ module.exports = function (db) {
             $expr: {
               $eq: ["$_id", "$$user_id"],
             }
+          }
+        }, {
+          $project: {
+            _id: 1,
+            username: 1,
+            avatar: 1,
+            firstname: 1,
           }
         }],
         as: "user_detail"

@@ -1,3 +1,7 @@
+ssl_cert.txt
+data/**
+!data/.gitkeep
+
 # OSX
 #
 .DS_Store

@@ -17,6 +17,13 @@ module.exports = function (db) {
             $in: ["$_id", "$$user_id_list"]
           }
         }
+      }, {
+        $project: {
+          _id: 1,
+          username: 1,
+          avatar: 1,
+          firstname: 1,
+        }
       }],
       as: "participants_details"
     }
@@ -130,27 +137,27 @@ module.exports = function (db) {
           participants: user_id
         }]
       }
-    // }, {
-    //   $lookup: {
-    //     from: "challenge_invitation",
-    //     let: { "challenge_accepted_id": "$_id" },
-    //     pipeline: [{
-    //       $match: {
-    //         $expr: {
-    //           $and: [
-    //             { $eq: ["$challenge_accepted", "$$challenge_accepted_id"] },
-    //             { $eq: ["$accept", 1] },
-    //           ]
-    //         }
-    //       }
-    //     }],
-    //     as: "challenge_detail"
-    //   }
-    // }, {
-    //   $unwind: {
-    //     path: "$my_invitation_status",
-    //     preserveNullAndEmptyArrays: true
-    //   }
+      // }, {
+      //   $lookup: {
+      //     from: "challenge_invitation",
+      //     let: { "challenge_accepted_id": "$_id" },
+      //     pipeline: [{
+      //       $match: {
+      //         $expr: {
+      //           $and: [
+      //             { $eq: ["$challenge_accepted", "$$challenge_accepted_id"] },
+      //             { $eq: ["$accept", 1] },
+      //           ]
+      //         }
+      //       }
+      //     }],
+      //     as: "challenge_detail"
+      //   }
+      // }, {
+      //   $unwind: {
+      //     path: "$my_invitation_status",
+      //     preserveNullAndEmptyArrays: true
+      //   }
     }, {
       $lookup: {
         from: "challenges",
@@ -235,27 +242,27 @@ module.exports = function (db) {
           participants: user_id
         }]
       }
-    // }, {
-    //   $lookup: {
-    //     from: "challenge_invitation",
-    //     let: { "challenge_accepted_id": "$_id" },
-    //     pipeline: [{
-    //       $match: {
-    //         $expr: {
-    //           $and: [
-    //             { $eq: ["$challenge_accepted", "$$challenge_accepted_id"] },
-    //             { $eq: ["$accept", 1] },
-    //           ]
-    //         }
-    //       }
-    //     }],
-    //     as: "challenge_detail"
-    //   }
-    // }, {
-    //   $unwind: {
-    //     path: "$my_invitation_status",
-    //     preserveNullAndEmptyArrays: true
-    //   }
+      // }, {
+      //   $lookup: {
+      //     from: "challenge_invitation",
+      //     let: { "challenge_accepted_id": "$_id" },
+      //     pipeline: [{
+      //       $match: {
+      //         $expr: {
+      //           $and: [
+      //             { $eq: ["$challenge_accepted", "$$challenge_accepted_id"] },
+      //             { $eq: ["$accept", 1] },
+      //           ]
+      //         }
+      //       }
+      //     }],
+      //     as: "challenge_detail"
+      //   }
+      // }, {
+      //   $unwind: {
+      //     path: "$my_invitation_status",
+      //     preserveNullAndEmptyArrays: true
+      //   }
     }, {
       $lookup: {
         from: "challenges",
@@ -347,9 +354,10 @@ module.exports = function (db) {
           }
         }, {
           $project: {
+            _id: 1,
             username: 1,
-            profile_picture: 1,
-            firstname: 1
+            avatar: 1,
+            firstname: 1,
           }
         }],
         as: "from_user"

@@ -11,7 +11,7 @@ var self = module.exports = {
    * Upload one file
    * 
    * ****************************/
-  uploadOneFile: function (file, allowExts) {
+  uploadOneFile: function (file, prefix, allowExts) {
     /*
      * If files extention limted
      */
@@ -30,15 +30,15 @@ var self = module.exports = {
       }
     }
 
-    // console.log('file', file)
+    console.log('[uploadOneFile] file', file)
 
     /*
      * move file to uploads directory
      * since this is deployed in docker, the uploads folder is mounted at /data/uploaded_file
      */
     //! TODO: Change the path plzzz
-    outPath = '/root/act4charity_backend/uploads/' + file.name
-    // console.log(outPath)
+    const outPath = '/root/act4charity_backend/uploads/' + prefix + '__' + file.name
+    console.log('[uploadOneFile]', outPath)
     file.mv(outPath)
 
     data = {
@@ -69,16 +69,21 @@ var self = module.exports = {
       } else {
         let data = []
 
-        console.log('req.files.files', req.files.files)
+        console.log('[uploadFiles] req.files.files', req.files.files)
+
+        const d = new Date()
+        const prefix = req.user.username + '__' + d.toJSON().slice(0, 19).replace('T', '_').replace(':', '-').replace(':', '-')
+        console.log('[uploadFiles] prefix', prefix)
 
         //? loop all files
         if (Array.isArray(req.files.files)) {
           for (var file of req.files.files) {
-            data_one = self.uploadOneFile(file, allowExts)
+            data_one = self.uploadOneFile(file, prefix, allowExts)
             data.push(data_one)
           }
         } else {
-          data.push(self.uploadOneFile(req.files.files, allowExts))
+          console.log('[uploadFiles] here')
+          data.push(self.uploadOneFile(req.files.files, prefix, allowExts))
         }
 
         // console.log('data', data)
