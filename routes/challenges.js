@@ -46,7 +46,7 @@ module.exports = function (db) {
     // console.log('params', params)
 
     if ( !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Missing params'
       })

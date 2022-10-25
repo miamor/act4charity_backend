@@ -4,17 +4,19 @@ const { ObjectId } = require('mongodb') // or ObjectID
 module.exports = function (db) {
   var module = {}
 
-  // Handling user signup
+
   module.register = async function (req, res) {
     const user_info = req.body
     const password = user_info.password
+    const external_login = user_info.external_login || false
+
     console.log('[register] user_info', checkUserEmail)
 
     const UsersCollection = db.collection('users')
     var checkUserEmail = await UsersCollection.findOne({ email: user_info.email })
     console.log('checkUserEmail', checkUserEmail)
     if (checkUserEmail != null) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'This email has been registered.'
       })
@@ -22,9 +24,30 @@ module.exports = function (db) {
 
     const checkUsername = await UsersCollection.findOne({ username: user_info.username })
     if (checkUsername != null) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Username not available.'
+      })
+    }
+
+    if (external_login == true) {
+      const inserted_data = await UsersCollection.insertOne({
+        email: user_info.email,
+        username: user_info.username,
+        // password: hashedPassword,
+        type: 'user',
+        // premium: 0,
+        current_reward: 5,
+        current_donation: 0,
+        avatar: 'http://149.28.157.194:5006/logo.png',
+        firstname: user_info.firstname,
+        interests: [],
+        external_login: true,
+      })
+
+      return res.send({
+        status: 'success',
+        // data: inserted_data,
       })
     }
 
@@ -38,16 +61,16 @@ module.exports = function (db) {
 
           if (err) {
             // return console.log('Cannot encrypt')
-            return res.send({ 
+            return res.status(505).send({
               status: 'error',
-              message: 'Cannot encrypt.' 
+              message: 'Cannot encrypt.'
             })
           }
 
           hashedPassword = hash
           console.log(hash)
 
-          const user = await UsersCollection.insertOne({
+          const inserted_data = await UsersCollection.insertOne({
             email: user_info.email,
             username: user_info.username,
             password: hashedPassword,
@@ -58,23 +81,24 @@ module.exports = function (db) {
             avatar: 'http://149.28.157.194:5006/logo.png',
             firstname: user_info.firstname,
             interests: [],
+            external_login: false,
           })
 
-          response = {
-            status: 'success'
-          }
           return res.send({
             status: 'success',
-            data: response
+            data: {
+              status: 'success',
+              // data: inserted_data
+            }
           })
         })
       })
 
     }
     catch (err) {
-      return res.send({ 
+      return res.status(500).send({
         status: 'error',
-        message: 'An error has occurred' 
+        message: 'An error has occurred'
       })
     }
   }
@@ -83,6 +107,7 @@ module.exports = function (db) {
   module.login = async function (req, res) {
     const user_info = req.body
     const password = user_info.password
+    const external_login = user_info.external_login || false
 
     console.log('Login as: ' + JSON.stringify(user_info))
 
@@ -95,6 +120,30 @@ module.exports = function (db) {
     //var token = crypto.randomBytes(64).toString('hex')
     //response = {token: }
 
+    if (external_login == true) {
+      const payload = {
+        id: user._id,
+        username: user.username,
+        type: user.type
+      }
+      console.log('>> (external_login) login payload', payload)
+      
+      var token = jwt.sign(payload, app.get('superSecret'))
+
+      response = {
+        status: 'success',
+        message: 'Enjoy your token!',
+        uType: user.type,
+        token: token,
+        user_info: user,
+      }
+      return res.send({
+        status: 'success',
+        data: response
+      })
+    }
+
+
     bcrypt.genSalt(10, function (err, Salt) {
       bcrypt.hash(password, Salt, async function (err, hash) {
         console.log('hash : ', hash)
@@ -102,7 +151,7 @@ module.exports = function (db) {
     })
 
     if (!user) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Authentication failed. User not found.'
       })
@@ -141,7 +190,7 @@ module.exports = function (db) {
         if (!isMatch) {
           // If password doesn't match the following
           // message will be sent
-          return res.send({
+          return res.status(401).send({
             status: 'error',
             message: 'Authentication failed. User not found.'
           })

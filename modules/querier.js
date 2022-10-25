@@ -20,7 +20,7 @@ var self = module.exports = {
    * ****************************/
   getById: async function (req, res) {
     if (!req.body.hasOwnProperty('_id') || req.body._id == null || typeof req.body._id !== 'string' || req.body._id.length === 0) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'id must be provided'
       })
@@ -260,7 +260,7 @@ var self = module.exports = {
    * ****************************/
   insertOne: async function (req, res, insert_data) {
     if (insert_data == null) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Missing data to build record'
       })

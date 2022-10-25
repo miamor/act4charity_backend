@@ -137,7 +137,7 @@ module.exports = function (db) {
     // console.log('params', params)
 
     if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Missing params'
       })
@@ -170,7 +170,7 @@ module.exports = function (db) {
     const params = req.body
 
     if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Missing params'
       })
@@ -252,7 +252,7 @@ module.exports = function (db) {
     const params = req.body
 
     if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Missing params'
       })
@@ -375,7 +375,7 @@ module.exports = function (db) {
     const params = req.body
 
     if (!params.hasOwnProperty('filter') || !params.hasOwnProperty('page') || !params.hasOwnProperty('num_per_page') || !params.hasOwnProperty('do_count')) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Missing params'
       })
@@ -569,8 +569,11 @@ module.exports = function (db) {
     const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
     const user_id = ObjectId(req.user.id)
 
+    console.log('[acceptInvitation] challenge_accepted_id', challenge_accepted_id)
+    console.log('[acceptInvitation] user_id', user_id)
+
     const InvCollection = db.collection('challenge_invitation')
-    const updateStt = await InvCollection.updateOne({
+    const updateStt = await InvCollection.updateMany({
       challenge_accepted: challenge_accepted_id,
       to_uid: user_id,
     }, {
@@ -592,8 +595,13 @@ module.exports = function (db) {
     const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
     const user_id = ObjectId(req.user.id)
 
+    console.log('[declineInvitation] ', {
+      challenge_accepted: challenge_accepted_id,
+      to_uid: user_id,
+    })
+
     const InvCollection = db.collection('challenge_invitation')
-    const updateStt = await InvCollection.updateOne({
+    const updateStt = await InvCollection.updateMany({
       challenge_accepted: challenge_accepted_id,
       to_uid: user_id,
     }, {
@@ -616,7 +624,7 @@ module.exports = function (db) {
     const user_id = ObjectId(req.user.id)
 
     const InvCollection = db.collection('challenge_invitation')
-    const updateStt = await InvCollection.updateOne({
+    const updateStt = await InvCollection.updateMany({
       challenge_accepted: challenge_accepted_id,
       to_uid: user_id,
     }, {
@@ -643,7 +651,7 @@ module.exports = function (db) {
     const updateStt = await TheCollection.updateOne({
       _id: { $eq: challenge_accepted_id },
       user: { $eq: user_id },
-      active: { $eq: 1 }
+      active: { $in: [0, 1] }
     }, {
       $set: {
         active: -1 //? cancel
@@ -762,6 +770,9 @@ module.exports = function (db) {
       active: 1
     }
 
+    if (mode == 'team') {
+      insert_data.active = 0
+    }
 
     /*
      * Add to challenge_accepted table
@@ -780,26 +791,28 @@ module.exports = function (db) {
      * If team mode: send invitation to other participants
      */
     if (mode == 'team') {
-      insert_data.active = 0
-
       //? send invitation
       participants.forEach(async (to) => {
-        const invitation_data = {
-          challenge_accepted: inserted_data.insertedId,
-          challenge: challenge_id, //? actually redundant
-          from_uid: user_id,
-          to_uid: to,
-          accept: 0,
+        console.log('to = ', to)
+        console.log('user_id = ', user_id)
+        if (to != user_id) {
+          const invitation_data = {
+            challenge_accepted: inserted_data.insertedId,
+            challenge: challenge_id, //? actually redundant
+            from_uid: user_id,
+            to_uid: to,
+            accept: 0,
+          }
+          console.log('>> invitation_data', invitation_data)
+          const InvCollection = db.collection('challenge_invitation')
+          await InvCollection.insertOne(invitation_data, { safe: true })
         }
-        console.log('>> invitation_data', invitation_data)
-        const InvCollection = db.collection('challenge_invitation')
-        await InvCollection.insertOne(invitation_data, { safe: true })
       })
 
       /*
        * Get participants info
        */
-      const UserCollection = db.collection('challenge_accepted')
+      const UserCollection = db.collection('users')
       participants_details = await UserCollection.find({ _id: { $in: participants } }).project({ username: 1, firstname: 1, lastname: 1, _id: 1, profile_picture: 1 }).toArray()
     }
 
@@ -871,7 +884,7 @@ module.exports = function (db) {
      */
     var upload_res = uploader.uploadFiles(req, res)
     if (upload_res.status === 'error') {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: upload_res
       })
@@ -964,6 +977,32 @@ module.exports = function (db) {
     return res.send({
       status: 'success',
       data: items
+    })
+  }
+
+
+
+  /* ****************************
+   * 
+   * Recheck the status of a challenge_accepted
+   * 
+   * ****************************/
+  module.getChallengeAcceptedStatus = async function (req, res) {
+    //? challenge_accepted_id
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    //? user id
+    const user_id = ObjectId(req.user.id)
+
+    console.log('[getChallengeAcceptedStatus] challenge_accepted_id', challenge_accepted_id)
+
+    const TheCollection = db.collection('challenge_accepted')
+    const item = await TheCollection.findOne({
+      _id: challenge_accepted_id,
+    }, { active: 1 })
+
+    return res.send({
+      status: 'success',
+      data: item
     })
   }
 

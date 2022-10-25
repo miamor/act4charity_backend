@@ -25,7 +25,7 @@ module.exports = function (db) {
     captureJson = charity_act_builder(capture_data)
 
     if (captureJson == null) {
-      return res.send({
+      return res.status(505).send({
         status: 'error',
         message: 'Missing data to build record'
       })

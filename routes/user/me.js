@@ -21,7 +21,10 @@ module.exports = function (db) {
       // verifies secret and checks exp
       return jwt.verify(token, app.get('superSecret'), async function (err, decoded) {
         if (err) {
-          return res.send({ status: 'error', message: 'Failed to authenticate token.' })
+          return res.status(401).send({
+            status: 'error', 
+            message: 'Failed to authenticate token.'
+          })
         } else {
           //? if everything is good, save to request for use in other routes
           req.decoded = decoded
@@ -101,7 +104,7 @@ module.exports = function (db) {
     var upload_res = uploader.uploadFiles(req, res)
     console.log('upload_res =', upload_res)
     if (upload_res.status === 'error') {
-      return res.send(upload_res)
+      return res.status(505).send(upload_res)
     }
 
     files_data = upload_res.data
@@ -113,7 +116,7 @@ module.exports = function (db) {
     // const filepaths = files_data.map(file_data => file_data.file_path)
     const filepath = files_data[0].file_path
 
-    const file_urlpath = 'http://149.28.157.194:5006/'+filepath.split('/uploads/')[1]
+    const file_urlpath = 'http://149.28.157.194:5006/' + filepath.split('/uploads/')[1]
 
 
     /* 
