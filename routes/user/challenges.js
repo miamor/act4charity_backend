@@ -693,7 +693,13 @@ module.exports = function (db) {
       active: { $eq: 1 }
     }, {
       $set: {
-        active: 2 //? finished
+        //? finished status
+        active: 2,
+        //? time completed
+        time_completed: new Date(Date.now()),
+        //? donation and reward
+        donation: challenge_donation,
+        reward: challenge_reward,
       }
     })
 
@@ -767,7 +773,10 @@ module.exports = function (db) {
       //? 0: waiting to start (in casee of team)
       //? -1: cancel
       //? 2: finished
-      active: 1
+      active: 1,
+
+      //? time start
+      time_started: new Date(Date.now()),
     }
 
     if (mode == 'team') {
@@ -852,7 +861,11 @@ module.exports = function (db) {
       _id: challenge_accepted_id,
       user: user_id
     }, {
-      $set: { active: 1 }
+      $set: { 
+        active: 1,
+        //? time started
+        time_started: new Date(Date.now()),
+      }
     })
 
     return res.send({
@@ -911,7 +924,7 @@ module.exports = function (db) {
       user: user_id,
       public: public
     }
-    const TheCollection = db.collection('challenge_story')
+    const TheCollection = db.collection(public === false ? 'challenge_chat' : 'challenge_story')
     const inserted_data = await TheCollection.insertOne(insert_data, { safe: true })
 
 
@@ -984,6 +997,101 @@ module.exports = function (db) {
 
   /* ****************************
    * 
+   * Send chat message in team challenge
+   * 
+   * ---
+   * 
+   * for picture upload, use listStory function
+   * 
+   * ****************************/
+  module.sendChat = async function (req, res) {
+    //? challenge_id
+    const challenge_id = ObjectId(req.body.challenge_id)
+    //? challenge_accepted_id
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    //? user id
+    const user_id = ObjectId(req.user.id)
+
+    /*
+     * Add to db
+     */
+    let insert_data = {
+      content: req.body.content,
+      challenge_accepted: challenge_accepted_id,
+      challenge: challenge_id,
+      user: user_id,
+    }
+    const TheCollection = db.collection('challenge_chat')
+    const inserted_data = await TheCollection.insertOne(insert_data, { safe: true })
+
+
+    return res.send({
+      status: 'success',
+      data: {
+        ...insert_data,
+        _id: inserted_data.insertedId
+      }
+    })
+  }
+
+
+
+  /* ****************************
+   * 
+   * List chat by challenge_accepted_id (team challenge chat)
+   * 
+   * ****************************/
+  module.listChat = async function (req, res) {
+    //? challenge_accepted_id
+    const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+
+    const TheCollection = db.collection('challenge_chat')
+    const items = await TheCollection.aggregate([{
+      $match: {
+        $and: [{
+          challenge_accepted: { $eq: challenge_accepted_id }
+        }]
+      }
+    }, {
+      $lookup: {
+        from: "users",
+        let: { "user_id": "$user" },
+        pipeline: [{
+          $match: {
+            $expr: {
+              $eq: ["$_id", "$$user_id"],
+            }
+          }
+        }, {
+          $project: {
+            _id: 1,
+            username: 1,
+            // avatar: 1,
+            // firstname: 1,
+          }
+        }],
+        as: "user_detail"
+      }
+    }, {
+      $unwind: {
+        path: "$user_detail",
+        preserveNullAndEmptyArrays: false
+      }
+    }, {
+      $sort: { _id: -1 }
+    }]).toArray()
+
+
+    return res.send({
+      status: 'success',
+      data: items
+    })
+  }
+
+
+
+  /* ****************************
+   * 
    * Recheck the status of a challenge_accepted
    * 
    * ****************************/
@@ -998,7 +1106,7 @@ module.exports = function (db) {
     const TheCollection = db.collection('challenge_accepted')
     const item = await TheCollection.findOne({
       _id: challenge_accepted_id,
-    }, { active: 1 })
+    }, { active: 1, time_started: 1 })
 
     return res.send({
       status: 'success',

@@ -401,6 +401,12 @@ module.exports = function (db) {
         preserveNullAndEmptyArrays: false
       }
     }, {
+      $match: {
+        $expr: { 
+          $eq: ["$challenge_accepted_detail.active", 0],
+        }
+      }
+    }, {
       $lookup: {
         from: "users",
         let: { "user_id_list": "$challenge_accepted_detail.participants" },

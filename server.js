@@ -245,6 +245,8 @@ MongoClient.connect(mongo_connect_url).then(client => {
   app.post('/user/challenges/cancel_invitation', us_challenges.cancelInvitation)
   app.post('/user/challenges/share_story', us_challenges.shareStory)
   app.post('/user/challenges/list_story', us_challenges.listStory)
+  app.post('/user/challenges/send_chat', us_challenges.sendChat)
+  app.post('/user/challenges/list_chat', us_challenges.listChat)
   app.post('/user/challenges/accepted_status', us_challenges.getChallengeAcceptedStatus)
 
   var FEEDS = require('./routes/user/feeds'),
