@@ -199,7 +199,7 @@ module.exports = function (db) {
       }
     })
 
-    console.log('aggAr', JSON.stringify(aggAr))
+    //~console.log('aggAr', JSON.stringify(aggAr))
     // console.log('aggAr', aggAr)
 
 
@@ -314,7 +314,7 @@ module.exports = function (db) {
       }
     })
 
-    console.log('aggAr', JSON.stringify(aggAr))
+    //~console.log('aggAr', JSON.stringify(aggAr))
 
 
 
@@ -463,7 +463,7 @@ module.exports = function (db) {
       }
     })
 
-    console.log('aggAr', JSON.stringify(aggAr))
+    //~console.log('aggAr', JSON.stringify(aggAr))
 
 
 

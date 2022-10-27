@@ -151,7 +151,7 @@ module.exports = function (db) {
 
     var aggQ = agg_join_query
 
-    console.log('aggAr', aggQ)
+    //~console.log('aggAr', aggQ)
 
 
     return querier.getListAdvanced(res, filter, aggQ, page, num_per_page, do_count)
@@ -188,12 +188,12 @@ module.exports = function (db) {
      * Find by user's filter
      */
     for (const [k, v] of Object.entries(filter)) {
-      console.log(k, v)
+      //~console.log(k, v)
       if (v != null && v.length > 0) {
         matchAr.push({ [k]: { $eq: v } })
       }
     }
-    console.log('matchAr', matchAr)
+    //~console.log('matchAr', matchAr)
 
 
     var aggAr = []
@@ -224,7 +224,7 @@ module.exports = function (db) {
       }
     })
 
-    console.log('aggAr', JSON.stringify(aggAr))
+    //~console.log('aggAr', JSON.stringify(aggAr))
 
 
 
@@ -292,7 +292,7 @@ module.exports = function (db) {
       places_ids = places.map(place => ObjectId(place._id))
     }
 
-    console.log('>>> places_ids', places_ids)
+    //~console.log('>>> places_ids', places_ids)
 
 
     /*
@@ -310,13 +310,13 @@ module.exports = function (db) {
      */
     for (const [k, v] of Object.entries(filter)) {
       if (k != 'user_loc' && k != 'distance') {
-        console.log(k, v)
+        //~console.log(k, v)
         if (v != null && v.length > 0) {
           matchAr.push({ [k]: { $eq: v } })
         }
       }
     }
-    console.log('matchAr', matchAr)
+    //~console.log('matchAr', matchAr)
 
 
     var aggAr = []
@@ -347,7 +347,7 @@ module.exports = function (db) {
       }
     })
 
-    console.log('aggAr', JSON.stringify(aggAr))
+    //~console.log('aggAr', JSON.stringify(aggAr))
 
 
 
@@ -432,7 +432,7 @@ module.exports = function (db) {
       places_ids = places.map(place => ObjectId(place._id))
     }
 
-    console.log('>>> places_ids', places_ids)
+    //~console.log('>>> places_ids', places_ids)
 
 
     /*
@@ -467,7 +467,7 @@ module.exports = function (db) {
         $or: interests_conds
       })
     }
-    console.log('matchAndAr', matchAndAr)
+    //~console.log('matchAndAr', matchAndAr)
 
 
     aggAr.push({
@@ -476,7 +476,7 @@ module.exports = function (db) {
       }
     })
 
-    console.log('aggAr', aggAr)
+    //~console.log('aggAr', aggAr)
 
 
     aggAr = [...aggAr, ...agg_join_place_query, ...agg_join_query]
@@ -496,7 +496,7 @@ module.exports = function (db) {
       }
     })
 
-    console.log('aggAr', JSON.stringify(aggAr))
+    //~console.log('aggAr', JSON.stringify(aggAr))
 
 
 
@@ -550,8 +550,8 @@ module.exports = function (db) {
     const InvCollection = db.collection('challenge_invitation')
     const invitations = await InvCollection.find({ challenge_accepted: challenge_accepted_id }).toArray()
 
-    console.log('challenge_accepted_id', challenge_accepted_id)
-    console.log('invitations', invitations)
+    //~console.log('challenge_accepted_id', challenge_accepted_id)
+    //~console.log('invitations', invitations)
 
     return res.send({
       status: 'success',
@@ -569,8 +569,8 @@ module.exports = function (db) {
     const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
     const user_id = ObjectId(req.user.id)
 
-    console.log('[acceptInvitation] challenge_accepted_id', challenge_accepted_id)
-    console.log('[acceptInvitation] user_id', user_id)
+    //~console.log('[acceptInvitation] challenge_accepted_id', challenge_accepted_id)
+    //~console.log('[acceptInvitation] user_id', user_id)
 
     const InvCollection = db.collection('challenge_invitation')
     const updateStt = await InvCollection.updateMany({
@@ -595,10 +595,10 @@ module.exports = function (db) {
     const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
     const user_id = ObjectId(req.user.id)
 
-    console.log('[declineInvitation] ', {
-      challenge_accepted: challenge_accepted_id,
-      to_uid: user_id,
-    })
+    // console.log('[declineInvitation] ', {
+    //   challenge_accepted: challenge_accepted_id,
+    //   to_uid: user_id,
+    // })
 
     const InvCollection = db.collection('challenge_invitation')
     const updateStt = await InvCollection.updateMany({
@@ -711,9 +711,9 @@ module.exports = function (db) {
     if (req.body.participants != null) {
       const participants = req.body.participants.map(x => ObjectId(x))
 
-      console.log('participants', participants)
-      console.log('challenge_reward', challenge_reward)
-      console.log('challenge_donation', challenge_donation)
+      //~console.log('participants', participants)
+      //~console.log('challenge_reward', challenge_reward)
+      //~console.log('challenge_donation', challenge_donation)
       /* 
        * Update user current_reward and current_donation
        */
@@ -776,11 +776,13 @@ module.exports = function (db) {
       active: 1,
 
       //? time start
-      time_started: new Date(Date.now()),
     }
 
     if (mode == 'team') {
       insert_data.active = 0
+    }
+    else {
+      insert_data.time_started = new Date(Date.now())
     }
 
     /*
@@ -802,8 +804,8 @@ module.exports = function (db) {
     if (mode == 'team') {
       //? send invitation
       participants.forEach(async (to) => {
-        console.log('to = ', to)
-        console.log('user_id = ', user_id)
+        //~console.log('to = ', to)
+        //~console.log('user_id = ', user_id)
         if (to != user_id) {
           const invitation_data = {
             challenge_accepted: inserted_data.insertedId,
@@ -812,7 +814,7 @@ module.exports = function (db) {
             to_uid: to,
             accept: 0,
           }
-          console.log('>> invitation_data', invitation_data)
+          //~console.log('>> invitation_data', invitation_data)
           const InvCollection = db.collection('challenge_invitation')
           await InvCollection.insertOne(invitation_data, { safe: true })
         }
@@ -861,7 +863,7 @@ module.exports = function (db) {
       _id: challenge_accepted_id,
       user: user_id
     }, {
-      $set: { 
+      $set: {
         active: 1,
         //? time started
         time_started: new Date(Date.now()),
@@ -891,6 +893,7 @@ module.exports = function (db) {
     const user_id = ObjectId(req.user.id)
 
     const public = req.body.public === "false" ? false : true
+    const sock = req.body.sock === "true" ? true : false
 
     /*
      * first upload files
@@ -918,13 +921,20 @@ module.exports = function (db) {
      */
     let insert_data = {
       picture: file_urlpath,
-      content: req.body.content,
       challenge_accepted: challenge_accepted_id,
       challenge: challenge_id,
       user: user_id,
       public: public
     }
-    const TheCollection = db.collection(public === false ? 'challenge_chat' : 'challenge_story')
+    if (sock === true || public === false) {
+      insert_data.data = req.body.content
+      insert_data.user_id = req.body.user_id
+    }
+    else {
+      insert_data.content = req.body.content
+    }
+
+    const TheCollection = db.collection((sock === true || public === false) ? 'challenge_sockmsg_chat' : 'challenge_story')
     const inserted_data = await TheCollection.insertOne(insert_data, { safe: true })
 
 
@@ -1078,7 +1088,7 @@ module.exports = function (db) {
         preserveNullAndEmptyArrays: false
       }
     }, {
-      $sort: { _id: -1 }
+      $sort: { _id: 1 }
     }]).toArray()
 
 
@@ -1087,6 +1097,143 @@ module.exports = function (db) {
       data: items
     })
   }
+
+
+
+
+
+
+  module.sendSockMsg = async function (req, res) {
+    const user_id = ObjectId(req.user.id)
+    const time = new Date(req.body.time)
+
+    const tbl = (req.body.tbl === 'actions') ? 'actions' : (req.body.tbl === 'states') ? 'states' : 'chat'
+
+    const TheCollection = db.collection('challenge_sockmsg_' + tbl)
+
+    const data = {
+      ...req.body,
+      user: user_id,
+      time: new Date(Date.now()),
+    }
+
+    /*
+     * For `update_track_state`
+     * check if record of this action (of this user) exists
+     */
+    if (req.body.action === 'update_track_state') {
+      console.log('is update_track_state')
+
+      const checkExist = await TheCollection.find({
+        room_id: req.body.room_id,
+        user: user_id,
+        action: req.body.action,
+        state_type: req.body.state_type,
+      }, { _id: 1 }).limit(1).toArray()
+
+      // console.log('isExist =', isExist)
+
+      if (checkExist != null && checkExist.length > 0) {
+        const updateStt = await TheCollection.updateMany({
+          room_id: req.body.room_id,
+          user: user_id,
+          action: req.body.action,
+          state_type: req.body.state_type,
+        }, {
+          $set: data
+        })
+        return res.send({
+          status: 'success',
+          data: updateStt
+        })
+      }
+    }
+
+
+    /*
+     * Add to db
+     */
+    const inserted_data = await TheCollection.insertOne(data, { safe: true })
+    return res.send({
+      status: 'success',
+      data: {
+        ...data,
+        _id: inserted_data.insertedId
+      }
+    })
+  }
+
+
+
+  /* ****************************
+   * 
+   * List sock msg
+   * 
+   * ****************************/
+  module.listSockMsg = async function (req, res) {
+    //? challenge_accepted_id
+    // const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    const tbl = (req.body.tbl === 'actions') ? 'actions' : (req.body.tbl === 'states') ? 'states' : 'chat'
+
+    let matchAndAr = [{
+      room_id: { $eq: req.body.challenge_accepted_id }
+    }]
+
+    if (req.body.time != null) {
+      //? from time
+      const time = new Date(req.body.time)
+
+      matchAndAr.push({
+        time: { $gt: time }
+      })
+    }
+
+    const TheCollection = db.collection('challenge_sockmsg_' + tbl)
+    const items = await TheCollection.aggregate([{
+      $match: {
+        $and: matchAndAr
+      }
+      // }, {
+      //   $lookup: {
+      //     from: "users",
+      //     let: { "user_id": "$user" },
+      //     pipeline: [{
+      //       $match: {
+      //         $expr: {
+      //           $eq: ["$_id", "$$user_id"],
+      //         }
+      //       }
+      //     }, {
+      //       $project: {
+      //         _id: 1,
+      //         username: 1,
+      //         avatar: 1,
+      //         // firstname: 1,
+      //       }
+      //     }],
+      //     as: "user_detail"
+      //   }
+      // }, {
+      //   $unwind: {
+      //     path: "$user_detail",
+      //     preserveNullAndEmptyArrays: false
+      //   }
+    }, {
+      $sort: { 
+        _id: tbl === 'actions' ? 1 : -1 
+      }
+    }]).toArray()
+
+
+    return res.send({
+      status: 'success',
+      data: items
+    })
+  }
+
+
+
+
 
 
 
@@ -1101,7 +1248,7 @@ module.exports = function (db) {
     //? user id
     const user_id = ObjectId(req.user.id)
 
-    console.log('[getChallengeAcceptedStatus] challenge_accepted_id', challenge_accepted_id)
+    //~console.log('[getChallengeAcceptedStatus] challenge_accepted_id', challenge_accepted_id)
 
     const TheCollection = db.collection('challenge_accepted')
     const item = await TheCollection.findOne({

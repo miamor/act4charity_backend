@@ -28,14 +28,14 @@ module.exports = function (db) {
         } else {
           //? if everything is good, save to request for use in other routes
           req.decoded = decoded
-          console.log(decoded)
+          //~console.log(decoded)
 
           const TheCollection = db.collection(collection_name)
           const item = await TheCollection.findOne({ username: decoded.username })
           delete item['password']
 
-          console.log('Got my info: ')
-          console.log(JSON.stringify(item))
+          //~console.log('Got my info: ')
+          //~console.log(JSON.stringify(item))
           return res.send({
             status: 'success',
             data: item
@@ -65,7 +65,7 @@ module.exports = function (db) {
 
     const loggedUser = req.user
 
-    console.log(loggedUser)
+    //~console.log(loggedUser)
 
     // var users = req.body
     // users.username = loggedUser.username
@@ -75,7 +75,7 @@ module.exports = function (db) {
     // const userJson = user_builder(req.body)
     let userJson = req.body
     if (userJson.interests != null) {
-      console.log('userJson.interests', userJson.interests)
+      //~console.log('userJson.interests', userJson.interests)
       userJson.interests = userJson.interests.map(x => ObjectId(x))
     }
     delete userJson._id
@@ -100,9 +100,9 @@ module.exports = function (db) {
     /*
      * first upload files
      */
-    console.log('calling uploader.uploadFiles ~~~~~~~~~')
+    //~console.log('calling uploader.uploadFiles ~~~~~~~~~')
     var upload_res = uploader.uploadFiles(req, res)
-    console.log('upload_res =', upload_res)
+    //~console.log('upload_res =', upload_res)
     if (upload_res.status === 'error') {
       return res.status(505).send(upload_res)
     }
