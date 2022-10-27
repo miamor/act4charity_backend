@@ -1122,7 +1122,7 @@ module.exports = function (db) {
      * check if record of this action (of this user) exists
      */
     if (req.body.action === 'update_track_state') {
-      console.log('is update_track_state')
+      // console.log('is update_track_state')
 
       const checkExist = await TheCollection.find({
         room_id: req.body.room_id,
