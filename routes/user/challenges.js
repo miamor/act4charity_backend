@@ -546,9 +546,13 @@ module.exports = function (db) {
    * ****************************/
   module.getInvitationsById = async function (req, res) {
     const challenge_accepted_id = ObjectId(req.body.challenge_accepted_id)
+    const user_id = ObjectId(req.user.id)
 
     const InvCollection = db.collection('challenge_invitation')
-    const invitations = await InvCollection.find({ challenge_accepted: challenge_accepted_id }).toArray()
+    const invitations = await InvCollection.find({
+      challenge_accepted: challenge_accepted_id,
+      user: { $ne: user_id }
+    }).toArray()
 
     //~console.log('challenge_accepted_id', challenge_accepted_id)
     //~console.log('invitations', invitations)
@@ -775,7 +779,7 @@ module.exports = function (db) {
       //? 2: finished
       active: 1,
 
-      //? time start
+      time: new Date(Date.now()),
     }
 
     if (mode == 'team') {
@@ -806,18 +810,19 @@ module.exports = function (db) {
       participants.forEach(async (to) => {
         //~console.log('to = ', to)
         //~console.log('user_id = ', user_id)
-        if (to != user_id) {
-          const invitation_data = {
-            challenge_accepted: inserted_data.insertedId,
-            challenge: challenge_id, //? actually redundant
-            from_uid: user_id,
-            to_uid: to,
-            accept: 0,
-          }
-          //~console.log('>> invitation_data', invitation_data)
-          const InvCollection = db.collection('challenge_invitation')
-          await InvCollection.insertOne(invitation_data, { safe: true })
+        // if (to != user_id) { //! still add invitation to myeslf, to render in dashboard
+        const invitation_data = {
+          challenge_accepted: inserted_data.insertedId,
+          challenge: challenge_id, //? actually redundant
+          from_uid: user_id,
+          to_uid: to,
+          accept: 0,
+          time: new Date(Date.now()),
         }
+        //~console.log('>> invitation_data', invitation_data)
+        const InvCollection = db.collection('challenge_invitation')
+        await InvCollection.insertOne(invitation_data, { safe: true })
+        // }
       })
 
       /*
@@ -913,7 +918,7 @@ module.exports = function (db) {
      * Get path to the uploaded file
      */
     const filepath = files_data[0].file_path
-    const file_urlpath = 'http://149.28.157.194:5006/' + filepath.split('/uploads/')[1]
+    const file_urlpath = 'https://socking.act4charity.monster/' + filepath.split('/uploads/')[1]
 
 
     /*
@@ -924,7 +929,8 @@ module.exports = function (db) {
       challenge_accepted: challenge_accepted_id,
       challenge: challenge_id,
       user: user_id,
-      public: public
+      public: public,
+      time: new Date(Date.now()),
     }
     if (sock === true || public === false) {
       insert_data.data = req.body.content
@@ -983,6 +989,8 @@ module.exports = function (db) {
             username: 1,
             avatar: 1,
             firstname: 1,
+            current_reward: 1,
+            current_donation: 1,
           }
         }],
         as: "user_detail"
@@ -1030,6 +1038,7 @@ module.exports = function (db) {
       challenge_accepted: challenge_accepted_id,
       challenge: challenge_id,
       user: user_id,
+      time: new Date(Date.now()),
     }
     const TheCollection = db.collection('challenge_chat')
     const inserted_data = await TheCollection.insertOne(insert_data, { safe: true })
@@ -1078,6 +1087,8 @@ module.exports = function (db) {
             username: 1,
             // avatar: 1,
             // firstname: 1,
+            current_reward: 1,
+            current_donation: 1,
           }
         }],
         as: "user_detail"
@@ -1219,8 +1230,8 @@ module.exports = function (db) {
       //     preserveNullAndEmptyArrays: false
       //   }
     }, {
-      $sort: { 
-        _id: tbl === 'actions' ? 1 : -1 
+      $sort: {
+        _id: tbl === 'actions' ? 1 : -1
       }
     }]).toArray()
 

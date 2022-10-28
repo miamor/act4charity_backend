@@ -238,9 +238,24 @@ module.exports = function (db) {
       $match: {
         $and: [{
           $or: [{
-            active: 0
+            $and: [
+              // { active: { $in: [0, 1] } },
+              { active: 0 },
+              { mode: 'team' },
+              { user: { $eq: user_id } }
+            ]
           }, {
-            active: 1
+            $and: [
+              // { active: { $in: [0, 1] } },
+              { active: 1 },
+              { mode: 'team' },
+              { user: { $ne: user_id } }
+            ]
+          }, {
+            $and: [
+              { active: 1 },
+              { mode: 'individual' }
+            ]
           }]
         }, {
           participants: user_id
@@ -269,6 +284,30 @@ module.exports = function (db) {
         path: "$my_invitation_status",
         preserveNullAndEmptyArrays: true
       }
+    // }, {
+    //   $match: {
+    //     $expr: {
+    //       $or: [{
+    //         $and: [
+    //           { $eq: ["$mode", 'individual'] },
+    //           // { $eq: ["$my_invitation_status", null] },
+    //           { $eq: ["$user", user_id] }
+    //         ]
+    //       }, {
+    //         $and: [
+    //           { $eq: ["$mode", 'team'] },
+    //           { $eq: ["$user", user_id] }
+    //         ]
+    //       }, {
+    //         $and: [
+    //           { $eq: ["$mode", 'team'] },
+    //           { $ne: ["$user", user_id] },
+    //           { $ne: ["$my_invitation_status", null] },
+    //           { $eq: ["$my_invitation_status.accept", 1] }
+    //         ]
+    //       }]
+    //     }
+    //   }
     }, {
       $lookup: {
         from: "challenges",
@@ -287,14 +326,14 @@ module.exports = function (db) {
         path: "$challenge_detail",
         preserveNullAndEmptyArrays: true
       }
-    // }, {
-    //   $match: {
-    //     $or: [{
-    //       $eq: ["$my_invitation_status.accept", 0]
-    //     }, {
-    //       $eq: ["$my_invitation_status.accept", 1]
-    //     }]
-    //   }
+      // }, {
+      //   $match: {
+      //     $or: [{
+      //       $eq: ["$my_invitation_status.accept", 0]
+      //     }, {
+      //       $eq: ["$my_invitation_status.accept", 1]
+      //     }]
+      //   }
     }]
 
     aggAr = [...aggAr, ...agg_join_place_query, ...agg_join_users_query, ...agg_join_query]
@@ -402,7 +441,7 @@ module.exports = function (db) {
       }
     }, {
       $match: {
-        $expr: { 
+        $expr: {
           $eq: ["$challenge_accepted_detail.active", 0],
         }
       }

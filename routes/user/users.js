@@ -15,9 +15,60 @@ module.exports = function (db) {
    * 
    * ****************************/
   module.getById = async function (req, res) {
-    querier.collection_name = collection_name
+    const user_id = ObjectId(req.body.user_id)
 
-    return querier.getById(req, res)
+    const aggAr = [{
+      $match: {
+        $expr: {
+          $eq: ["$_id", user_id]
+        }
+      }
+    }, {
+      $lookup: {
+        from: "challenge_story",
+        let: { "user_id": "$_id" },
+        pipeline: [{
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$user", "$$user_id"] },
+                { $eq: ["$public", true] },
+              ]
+            }
+          }
+        }],
+        as: "stories"
+      }
+    }, {
+      $lookup: {
+        from: "feeds",
+        let: { "user_id": "$_id" },
+        pipeline: [{
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$user", "$$user_id"] },
+                { $eq: ["$public", true] },
+              ]
+            }
+          }
+        }],
+        as: "feeds"
+      }
+    }]
+
+    const TheCollection = db.collection(collection_name)
+    const items = await TheCollection.aggregate(aggAr).toArray()
+    // let item = await TheCollection.findOne({ _id: user_id })
+
+    let item = items[0]
+
+    item.n_completed = await db.collection('challenge_accepted').countDocuments({ user: user_id, active: 2 })
+
+    return res.send({
+      status: 'success',
+      data: item
+    })
   }
 
 
@@ -79,6 +130,27 @@ module.exports = function (db) {
 
     const TheCollection = db.collection(collection_name)
     const items = await TheCollection.find({ username: { $regex: params.username } }).project({ username: 1 }).toArray()
+
+    return res.send({
+      status: 'success',
+      data: items
+    })
+  }
+
+
+
+  /* ****************************
+   * 
+   * Top active members
+   *
+   * ****************************/
+  module.topMembers = async function (req, res) {
+    querier.collection_name = collection_name
+
+    const params = req.body
+
+    const TheCollection = db.collection(collection_name)
+    const items = await TheCollection.find().project({ _id: 1, username: 1, avatar: 1, firstname: 1, current_donation: 1, current_reward: 1 }).sort({ current_donation: -1, current_reward: -1 }).limit(10).toArray()
 
     return res.send({
       status: 'success',

@@ -116,7 +116,7 @@ module.exports = function (db) {
     // const filepaths = files_data.map(file_data => file_data.file_path)
     const filepath = files_data[0].file_path
 
-    const file_urlpath = 'http://149.28.157.194:5006/' + filepath.split('/uploads/')[1]
+    const file_urlpath = 'https://socking.act4charity.monster/' + filepath.split('/uploads/')[1]
 
 
     /* 

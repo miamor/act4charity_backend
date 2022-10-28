@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb') // or ObjectID 
 const querier = require('../../modules/querier')
+const uploader = require('../../modules/uploader')
 
 
 module.exports = function (db) {
@@ -92,7 +93,7 @@ module.exports = function (db) {
      * Get path to the uploaded file
      */
     const filepath = files_data[0].file_path
-    const file_urlpath = 'http://149.28.157.194:5006/' + filepath.split('/uploads/')[1]
+    const file_urlpath = 'https://socking.act4charity.monster/' + filepath.split('/uploads/')[1]
 
 
     /*
@@ -106,7 +107,7 @@ module.exports = function (db) {
       user: user_id,
       public: public
     }
-    const TheCollection = db.collection('feed')
+    const TheCollection = db.collection(collection_name)
     const inserted_data = await TheCollection.insertOne(insert_data, { safe: true })
 
 

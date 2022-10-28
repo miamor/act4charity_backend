@@ -262,6 +262,7 @@ MongoClient.connect(mongo_connect_url).then(client => {
   // app.post('/user/users/list', users.getList)
   app.post('/user/users/detail', users.getById)
   app.post('/user/users/find', users.findByUsername)
+  app.post('/user/users/top', users.topMembers)
 
   var CHARITY_ACTS = require('./routes/user/charity_acts'),
     charity_acts = new CHARITY_ACTS(db)
