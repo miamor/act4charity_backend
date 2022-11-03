@@ -15,7 +15,7 @@ var self = module.exports = {
     /*
      * If files extention limted
      */
-    ext = getFileExtension(file.name)
+    const ext = getFileExtension(file.name)
     if (allowExts != null && Array.isArray(allowExts) && allowExts.length > 0 && !allowExts.includes(ext)) {
       //? if not in allowed file format, skip uploading this file
       // data.push({
@@ -30,7 +30,7 @@ var self = module.exports = {
       }
     }
 
-    console.log('[uploadOneFile] file', file)
+    // console.log('[uploadOneFile] file', file)
 
     /*
      * move file to uploads directory
@@ -38,10 +38,11 @@ var self = module.exports = {
      */
     //! TODO: Change the path plzzz
     const outPath = '/root/act4charity_backend/uploads/' + prefix + '__' + file.name
-    console.log('[uploadOneFile]', outPath)
+
+    console.log('[uploader][uploadOneFile]', outPath)
     file.mv(outPath)
 
-    data = {
+    const data = {
       // success: true,
 
       // file_name: file.name,
@@ -69,26 +70,25 @@ var self = module.exports = {
       } else {
         let data = []
 
-        console.log('[uploadFiles] req.files.files', req.files.files)
+        console.log('[uploader][uploadFiles] req.files.files', req.files.files)
 
         const d = new Date()
         const prefix = req.user.username + '__' + d.toJSON().slice(0, 19).replace('T', '_').replace(':', '-').replace(':', '-')
-        console.log('[uploadFiles] prefix', prefix)
+        console.log('[uploader][uploadFiles] prefix', prefix)
 
         //? loop all files
         if (Array.isArray(req.files.files)) {
           for (var file of req.files.files) {
-            data_one = self.uploadOneFile(file, prefix, allowExts)
+            const data_one = self.uploadOneFile(file, prefix, allowExts)
             data.push(data_one)
           }
         } else {
-          console.log('[uploadFiles] here')
+          // console.log('[uploader][uploadFiles] here')
           data.push(self.uploadOneFile(req.files.files, prefix, allowExts))
         }
 
-        // console.log('data', data)
+        // console.log('[uploader][uploadFiles] data', data)
 
-        // return response
         return {
           status: 'success',
           message: 'Files are uploaded',

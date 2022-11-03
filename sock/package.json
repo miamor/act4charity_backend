@@ -1,0 +1,12 @@
+{
+    "name": "sock_server",
+    "version": "0.0.1",
+    "description": "",
+    "dependencies": {
+        "express": "^4.18.2",
+        "socket.io": "^4.5.2"
+    },
+    "scripts": {
+        "start": "node index.js"
+    }
+}

@@ -172,9 +172,9 @@ module.exports = function (db) {
           /*var token = jwt.sign(payload, app.get('superSecret'), {
             expiresInMinutes: 1440 // expires in 24 hours
           })*/
-          var token = jwt.sign(payload, app.get('superSecret'))
+          const token = jwt.sign(payload, app.get('superSecret'))
 
-          response = {
+          const response = {
             status: 'success',
             message: 'Enjoy your token!',
             uType: user.type,
